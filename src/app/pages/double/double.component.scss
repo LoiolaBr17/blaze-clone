@@ -237,6 +237,9 @@
 
     .r-container {
       padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
 
       .painel {
         background-color: #0f1923;
@@ -264,7 +267,7 @@
             left: 50%;
             top: 50%;
             width: 4px;
-            height: 36%;
+            height: 50%;
             background-color: #fff;
             transform: translate(-50%, -50%);
             z-index: 10;
@@ -372,8 +375,12 @@
         gap: 4px;
         padding: 12px;
         border: 1px solid var(--separator);
-        width: 100%;
+        width: 98%;
+        border-radius: 4px;
         max-width: 723px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
 
         h4 {
           font-size: 12px;
