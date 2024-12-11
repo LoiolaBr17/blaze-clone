@@ -160,6 +160,63 @@
           font-size: 12px;
         }
       }
+
+      .container-select-color {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--light-grey);
+        }
+
+        .container-colors-options {
+          display: flex;
+          gap: 6px;
+          padding-top: 6px;
+
+          div {
+            height: 48px;
+            border-radius: 4px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+            span {
+              font-size: 12px;
+              font-weight: 600;
+              color: var(--white);
+            }
+
+            &.red {
+              background-color: var(--red);
+            }
+
+            &.white {
+              background-color: var(--white);
+
+              span {
+                color: var(--red);
+              }
+            }
+
+            &.black {
+              background-color: var(--black);
+            }
+
+            &.selected {
+              border: 2px solid var(--white);
+            }
+
+            &.white.selected {
+              border: 2px solid var(--red);
+            }
+          }
+        }
+      }
     }
 
     .r-container {
