@@ -3,9 +3,10 @@
   <div class="painel">
     <div class="container-carrosel">
       <div class="indicator-line"></div>
-      <!-- Barra de progresso flutuando na parte superior do container -->
-      <div class="progress-container">
+      <!-- Barra de progresso -->
+      <div class="progress-container" [class.countdown-active]="isCountingDown">
         <div class="progress-bar" #progressBar></div>
+        <p class="progress-text" #progressText></p>
       </div>
 
       <swiper-container

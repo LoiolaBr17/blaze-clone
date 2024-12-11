@@ -16,6 +16,9 @@ import {
 export class DoubleComponent implements OnDestroy, OnInit {
   @ViewChild('mySwiper', { static: true }) swiperEl!: ElementRef;
   @ViewChild('progressBar', { static: true }) progressBarEl!: ElementRef;
+  @ViewChild('progressText', { static: true }) progressTextEl!: ElementRef;
+
+  isCountingDown: boolean = false;
 
   private countdownInterval: any;
 
@@ -30,17 +33,25 @@ export class DoubleComponent implements OnDestroy, OnInit {
   }
 
   startCountdown() {
+    this.isCountingDown = true;
     const duration = 15000;
     const start = Date.now();
     const progressBar = this.progressBarEl.nativeElement;
+    const progressText = this.progressTextEl.nativeElement;
 
     clearInterval(this.countdownInterval);
     progressBar.style.width = '100%';
 
     this.countdownInterval = setInterval(() => {
       const elapsed = Date.now() - start;
+      const remaining = duration - elapsed;
       const percentage = 100 - (elapsed / duration) * 100;
       progressBar.style.width = Math.max(0, percentage) + '%';
+
+      if (remaining > 0) {
+        const seconds = (remaining / 1000).toFixed(2);
+        progressText.textContent = `Girando Em ${seconds}`;
+      }
 
       if (elapsed >= duration) {
         clearInterval(this.countdownInterval);
@@ -50,7 +61,12 @@ export class DoubleComponent implements OnDestroy, OnInit {
   }
 
   randomStop() {
+    this.isCountingDown = false;
     const swiper = this.swiperEl.nativeElement.swiper;
+    const progressText = this.progressTextEl.nativeElement;
+
+    progressText.textContent = "Girando...";
+
     const totalSlides = swiper.slides.length;
     const baseCount = totalSlides / 3;
 
