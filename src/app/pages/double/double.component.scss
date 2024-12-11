@@ -35,6 +35,26 @@
         z-index: 10;
       }
 
+      .progress-container {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 5px;
+        overflow: hidden;
+        z-index: 20;
+      }
+
+      .progress-bar {
+        height: 100%;
+        width: 100%;
+        background: #00ff00;
+        transition: width 0.1s linear;
+      }
+
       swiper-container {
         width: 100%;
         height: 100%;
@@ -42,12 +62,11 @@
         overflow: hidden;
       }
 
-      /* Ajuste os slides mantendo width: min-content; */
       swiper-slide {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: min-content; /* Mantendo min-content */
+        width: min-content;
       }
 
       .card {
@@ -90,24 +109,5 @@
         }
       }
     }
-  }
-}
-
-.controls {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-  z-index: 20;
-
-  button {
-    background: #fff;
-    color: #000;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 4px;
   }
 }
