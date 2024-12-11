@@ -1,177 +1,224 @@
 <div id="double-component">
   <section class="double-container">
     <div class="menu">Menu</div>
-    <div class="painel">
-      <div class="container-carrosel">
-        <div class="indicator-line"></div>
-        <!-- Barra de progresso -->
-        <div
-          class="progress-container"
-          [class.countdown-active]="isCountingDown"
-        >
-          <div class="progress-bar" #progressBar></div>
-          <p class="progress-text" #progressText></p>
-        </div>
+    <div class="r-container">
+      <div class="painel">
+        <div class="container-carrosel">
+          <div class="indicator-line"></div>
+          <!-- Barra de progresso -->
+          <div
+            class="progress-container"
+            [class.countdown-active]="isCountingDown"
+          >
+            <div class="progress-bar" #progressBar></div>
+            <p class="progress-text" #progressText></p>
+          </div>
 
-        <swiper-container
-          #mySwiper
-          loop="true"
-          slides-per-view="auto"
-          centeredSlides="true"
-          space-between="10"
-          speed="100"
-          allow-touch-move="false"
-          autoplay='{"delay":0,"disableOnInteraction":false}'
-        >
-          <!-- Lista de slides conforme o código original -->
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">1</span>
-            </div></swiper-slide
+          <swiper-container
+            #mySwiper
+            loop="true"
+            slides-per-view="auto"
+            centeredSlides="true"
+            space-between="10"
+            speed="100"
+            allow-touch-move="false"
+            autoplay='{"delay":0,"disableOnInteraction":false}'
           >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">14</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">2</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">13</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">3</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">12</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">4</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card big-win">
-              <img
-                src="../../../assets/images/logo_white.jpg"
-                alt="big win"
-              /></div
-          ></swiper-slide>
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">11</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">5</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">10</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">6</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">9</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">7</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">8</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">8</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">7</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">9</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">6</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">10</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">5</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">11</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">4</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">12</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">3</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">13</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">2</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card red">
-              <span class="white-rounded p1d">14</span>
-            </div></swiper-slide
-          >
-          <swiper-slide
-            ><div class="card black">
-              <span class="white-rounded p1d">1</span>
-            </div></swiper-slide
-          >
-        </swiper-container>
+            <!-- Lista de slides conforme o código original -->
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">1</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">14</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">2</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">13</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">3</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">12</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">4</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card big-win">
+                <img
+                  src="../../../assets/images/logo_white.jpg"
+                  alt="big win"
+                /></div
+            ></swiper-slide>
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">11</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">5</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">10</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">6</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">9</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">7</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">8</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">8</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">7</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">9</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">6</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">10</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">5</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">11</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">4</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">12</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">3</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">13</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">2</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card red">
+                <span class="white-rounded p1d">14</span>
+              </div></swiper-slide
+            >
+            <swiper-slide
+              ><div class="card black">
+                <span class="white-rounded p1d">1</span>
+              </div></swiper-slide
+            >
+          </swiper-container>
+        </div>
+      </div>
+      <div class="roulette-recent">
+        <h4>Giros Anteriores</h4>
+
+        <div class="roulette-previous casino-recent">
+          <div class="sm-box red">
+            <span>1</span>
+          </div>
+
+          <div class="sm-box black">
+            <span>6</span>
+          </div>
+
+          <div class="sm-box red">
+            <span>4</span>
+          </div>
+
+          <div class="sm-box red">
+            <span>10</span>
+          </div>
+
+          <div class="sm-box black">
+            <span>12</span>
+          </div>
+
+          <div class="sm-box">
+            <img src="../../../assets/images/logo_white.jpg" alt="big win">
+          </div>
+
+          <div class="sm-box black">
+            <span>3</span>
+          </div>
+
+          <div class="sm-box black">
+            <span>2</span>
+          </div>
+
+          <div class="sm-box red">
+            <span>9</span>
+          </div>
+
+          <div class="sm-box red">
+            <span>11</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
