@@ -33,7 +33,7 @@
               },
               {
                 "glob": "favicon.ico",
-                "input": "src",
+                "input": "public",
                 "output": "/"
               }
             ],
