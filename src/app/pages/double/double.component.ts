@@ -1,11 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-double',
-  imports: [],
   templateUrl: './double.component.html',
-  styleUrl: './double.component.scss'
+  styleUrls: ['./double.component.scss'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class DoubleComponent {
+export class DoubleComponent implements AfterViewInit {
+  @ViewChild('mySwiper', { static: true }) swiperEl!: ElementRef;
 
+  ngAfterViewInit(): void {
+    // Acessar a instância do swiper se necessário:
+    // console.log(this.swiperEl.nativeElement.swiper);
+  }
+
+  nextSlide() {
+    this.swiperEl.nativeElement.swiper.slideNext();
+  }
+
+  prevSlide() {
+    this.swiperEl.nativeElement.swiper.slidePrev();
+  }
 }

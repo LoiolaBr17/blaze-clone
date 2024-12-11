@@ -16,11 +16,26 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow: hidden;
 
     .container-carrosel {
-      //   background-color: var(--black);
-      background-color: yellow;
+      background-color: var(--black);
       height: 24rem;
+      overflow: hidden;
+
+      swiper-container {
+        width: 100%;
+        height: 100%;
+        display: block;
+        overflow: hidden;
+      }
+
+      swiper-slide {
+        display: inline-flex;
+        width: min-content;
+        align-items: center;
+        justify-content: center;
+      }
 
       .card {
         height: 75px;
@@ -56,9 +71,9 @@
 
       .big-win {
         img {
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
+          width: 100%;
+          height: 100%;
+          border-radius: 8px;
         }
       }
     }
