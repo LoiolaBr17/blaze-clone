@@ -20,8 +20,20 @@
 
     .container-carrosel {
       background-color: var(--black);
+      position: relative;
       height: 24rem;
       overflow: hidden;
+
+      .indicator-line {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 4px;
+        height: 36%;
+        background-color: #fff;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+      }
 
       swiper-container {
         width: 100%;
@@ -30,11 +42,12 @@
         overflow: hidden;
       }
 
+      /* Ajuste os slides mantendo width: min-content; */
       swiper-slide {
-        display: inline-flex;
-        width: min-content;
+        display: flex;
         align-items: center;
         justify-content: center;
+        width: min-content; /* Mantendo min-content */
       }
 
       .card {
@@ -69,7 +82,7 @@
         padding: 12px;
       }
 
-      .big-win {
+      .card.big-win {
         img {
           width: 100%;
           height: 100%;
@@ -77,5 +90,24 @@
         }
       }
     }
+  }
+}
+
+.controls {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 20;
+
+  button {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
   }
 }
