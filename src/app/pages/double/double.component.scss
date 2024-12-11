@@ -386,8 +386,17 @@
 
         .roulette-previous {
           display: flex;
+          flex-direction: row-reverse;
           gap: 6px;
           overflow: hidden;
+
+          .fairness-modal-link {
+            cursor: pointer;
+
+            &:hover {
+              background-color: var(--separator);
+            }
+          }
         }
 
         .sm-box {
