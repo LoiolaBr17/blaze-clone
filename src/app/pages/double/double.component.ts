@@ -6,11 +6,16 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-double',
   templateUrl: './double.component.html',
   styleUrls: ['./double.component.scss'],
+  imports: [MatFormFieldModule, MatInputModule, MatIconModule, FormsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DoubleComponent implements OnDestroy, OnInit {
@@ -19,6 +24,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
   @ViewChild('progressText', { static: true }) progressTextEl!: ElementRef;
 
   isCountingDown: boolean = false;
+  quantia: number | null = null;
 
   private countdownInterval: any;
 

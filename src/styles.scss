@@ -1,11 +1,12 @@
 :root {
-  --black: #0F1923;
+  --black: #0f1923;
   --red: #f12c4c;
-  --white: #FFFFFF;
+  --white: #ffffff;
   --gray: #1a242d;
   --separator: #323b45;
   --light-grey: #bcbfc7;
   --dark-background-four: #262f3c;
+  --ff-main: SofiaPro, "Roboto", sans-serif, Nasalization;
 }
 
 * {
@@ -44,3 +45,11 @@ button {
   background: #2d2f3c;
 }
 
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
