@@ -1,0 +1,44 @@
+.main-container {
+  display: flex;
+  height: 100%;
+
+  .container-nav {
+    width: 245px;
+    min-width: 245px;
+    height: auto;
+    height: auto;
+    background-color: #0f1923;
+    padding: 18px 23px 15px;
+
+    .christmas-btn-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 4px;
+      padding: 10px;
+      background-color: #f12c4c;
+      transition: all 0.5s;
+      cursor: pointer;
+
+      .text {
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      &:hover {
+        background-color: initial;
+        border: 1px solid #323b45;
+      }
+    }
+  }
+
+  .content {
+    max-width: 1104px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    padding: 0 16px;
+    overflow: auto;
+  }
+}
