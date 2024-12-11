@@ -18,6 +18,35 @@
       height: 100%;
       padding: 16px 24px;
       // background-color: red;
+
+      .tootle-menu {
+        border: 1px solid var(--separator);
+        width: 100%;
+        height: 48px;
+        display: flex;
+        padding: 2px;
+
+        span {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          color: var(--white);
+          border-radius: 2px;
+          font-size: 10px;
+          font-weight: 600;
+          font-stretch: normal;
+          text-transform: capitalize;
+          cursor: pointer;
+
+          &.selected {
+            background-color: var(--black);
+          }
+        }
+      }
+
+      
     }
 
     .r-container {
