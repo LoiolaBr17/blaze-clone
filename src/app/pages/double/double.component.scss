@@ -23,6 +23,7 @@
       position: relative;
       height: 24rem;
       overflow: hidden;
+      user-select: none;
 
       .indicator-line {
         position: absolute;
