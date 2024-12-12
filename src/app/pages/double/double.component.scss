@@ -298,7 +298,9 @@
               height: 100%;
               width: 0%;
               background: #f12c4c;
-              transition: width 0.1s linear;
+              transform-origin: left;
+              transform: scaleX(1);
+              transition: transform 0.1s linear;
               z-index: 1;
             }
 

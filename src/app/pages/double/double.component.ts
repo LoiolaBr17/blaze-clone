@@ -52,7 +52,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
       const elapsed = Date.now() - start;
       const remaining = duration - elapsed;
       const percentage = 100 - (elapsed / duration) * 100;
-      progressBar.style.width = Math.max(0, percentage) + '%';
+      progressBar.style.transform = `scaleX(${Math.max(0, percentage / 100)})`;
 
       if (remaining > 0) {
         const seconds = (remaining / 1000).toFixed(2);
