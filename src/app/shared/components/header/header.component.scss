@@ -26,10 +26,27 @@
         border-radius: 50%;
       }
     }
-  }
 
-  .logo {
-    cursor: pointer;
+    .logo {
+      cursor: pointer;
+      margin-right: 48px;
+    }
+
+    .promo-svg {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--separator);
+      border-radius: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
 
   .no-auth {
