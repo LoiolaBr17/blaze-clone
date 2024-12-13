@@ -1,11 +1,29 @@
 <app-header></app-header>
 <main class="main-container">
-    <div class="container-nav">
-        <div class="christmas-btn-container">
-            <span class="text">💵 Ganhe R$20 Grátis</span>
+  <div class="container-nav">
+    <div class="christmas-btn-container">
+      <span class="text">💵 Ganhe R$20 Grátis</span>
+    </div>
+
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>ORIGINAIS DA BLAZE</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="menu-options">
+          <div class="item">
+            <img src="../assets/images/teste2.svg" alt="clash" />
+            <span>Clash</span>
+          </div>
+          <div class="item selected">
+            <img src="../assets/images/teste.svg" alt="double" />
+            <span>Double</span>
+          </div>
         </div>
-    </div>
-    <div class="content">
-        <router-outlet />
-    </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <div class="content">
+    <router-outlet />
+  </div>
 </main>

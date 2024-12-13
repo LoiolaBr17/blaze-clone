@@ -61,3 +61,7 @@ body {
 .border-l-separator {
   border: 1px solid var(--separator);
 }
+
+.mat-expansion-panel-body {
+  padding: 0px !important;
+}
