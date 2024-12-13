@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { TabsDescriptionDoubleComponent } from './components/tabs-description-double/tabs-description-double.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-double',
@@ -22,6 +23,7 @@ import { TabsDescriptionDoubleComponent } from './components/tabs-description-do
     MatIconModule,
     FormsModule,
     TabsDescriptionDoubleComponent,
+    FooterComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

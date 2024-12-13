@@ -17,6 +17,7 @@
       border-radius: 4px;
       padding: 10px;
       background-color: #f12c4c;
+      border: 1px solid transparent;
       transition: all 0.5s;
       cursor: pointer;
 
@@ -39,7 +40,8 @@
     margin: 0 auto;
     position: relative;
     padding: 0 16px;
-    overflow: auto;
+    padding-bottom: 2rem;
+    overflow: scroll;
   }
 }
 
