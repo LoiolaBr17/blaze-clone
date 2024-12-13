@@ -1,0 +1,105 @@
+::ng-deep mat-tab-group {
+  background-color: var(--gray) !important;
+  border-radius: 6px;
+
+  .mdc-tab__text-label {
+    font-size: 12px !important;
+    color: var(--light-grey) !important;
+  }
+
+  .mat-mdc-tab-body-content {
+    min-height: 500px !important;
+    padding: 1rem;
+    color: #fff;
+  }
+}
+
+#tabs-description-double {
+  margin-top: 1rem;
+  margin-bottom: 10rem;
+
+  .roulette-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    .roulette {
+      width: 330px;
+      background-color: var(--gray);
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 5px 20px 0 rgba(6, 10, 14, 0.25);
+      color: var(--white);
+      font-family: var(--ff-main);
+
+      .color-value {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        h3 {
+          font-size: 14px;
+        }
+
+        img {
+          width: 35;
+          height: 35px;
+        }
+      }
+
+      .rouletted-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 18px;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 2;
+      }
+
+      .roulette-users-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 24px;
+        height: 32px;
+        border-radius: 4px;
+        padding: 0 16px;
+        color: var(--light-grey);
+        font-size: 12px;
+        background-color: var(--dark-background-four);
+      }
+
+      .roulette-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        border-bottom: 1px solid var(--separator);
+        font-size: 12px;
+
+        .user {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          p {
+            color: var(--dark-grey);
+          }
+        }
+      }
+
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1rem 0;
+        font-size: 12px;
+
+        .qtd-players {
+          color: var(--dark-grey);
+        }
+      }
+    }
+  }
+}

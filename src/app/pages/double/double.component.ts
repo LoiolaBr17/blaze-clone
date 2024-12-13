@@ -10,12 +10,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { TabsDescriptionDoubleComponent } from './components/tabs-description-double/tabs-description-double.component';
 
 @Component({
   selector: 'app-double',
   templateUrl: './double.component.html',
   styleUrls: ['./double.component.scss'],
-  imports: [MatFormFieldModule, MatInputModule, MatIconModule, FormsModule],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    FormsModule,
+    TabsDescriptionDoubleComponent,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DoubleComponent implements OnDestroy, OnInit {
@@ -71,7 +78,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
     const swiper = this.swiperEl.nativeElement.swiper;
     const progressText = this.progressTextEl.nativeElement;
 
-    progressText.textContent = "Girando...";
+    progressText.textContent = 'Girando...';
 
     const totalSlides = swiper.slides.length;
     const baseCount = totalSlides / 3;
