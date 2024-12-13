@@ -8,7 +8,6 @@
   }
 
   .mat-mdc-tab-body-content {
-    min-height: 500px !important;
     padding: 1rem;
     color: #fff;
   }
@@ -98,6 +97,62 @@
 
         .qtd-players {
           color: var(--dark-grey);
+        }
+      }
+    }
+  }
+
+  .description {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+
+    .description-game {
+      display: flex;
+      gap: 2rem;
+
+      .image {
+        min-width: 159px;
+        height: 210px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .tags-container {
+          display: flex;
+          gap: 6px;
+
+          .tag {
+            background-color: #8c9099;
+            color: #1a242d;
+            font-weight: 900;
+            font-size: 14px;
+            padding: 2px;
+            border-radius: 4px;
+          }
+        }
+
+        .text {
+          font-size: 14px;
+          font-weight: 400;
+          color: var(--white);
+        }
+
+        .read-more {
+          text-transform: uppercase;
+          color: var(--red);
+          cursor: pointer;
+          font-weight: 600;
+          font-size: 14px;
         }
       }
     }
