@@ -42,3 +42,9 @@
     overflow: auto;
   }
 }
+
+@media (max-width: 1249px) {
+  .main-container .container-nav {
+    display: none;
+  }
+}
