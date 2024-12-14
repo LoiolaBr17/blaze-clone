@@ -34,28 +34,74 @@ export class DoubleComponent implements OnDestroy, OnInit {
 
   isCountingDown: boolean = false;
   quantia: number | null = null;
-
   private countdownInterval: any;
+  private labels: string[] = [
+    ...Array.from({ length: 14 }, (_, i) => `red-${i + 1}`),
+    ...Array.from({ length: 14 }, (_, i) => `black-${i + 1}`),
+    'white',
+  ];
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.randomStop();
-    }, 3000);
+    this.startCarousel();
   }
 
   ngOnDestroy(): void {
     clearInterval(this.countdownInterval);
   }
 
-  startCountdown() {
-    this.isCountingDown = true;
-    const duration = 15000;
-    const start = Date.now();
+  private startCarousel(): void {
+    this.startCountdown(3000, () => {
+      this.spinToRandomLabel();
+    });
+  }
+
+  private spinToRandomLabel(): void {
+    const swiper = this.swiperEl.nativeElement.swiper;
+    const randomLabel = this.getRandomLabel();
+    const targetIndex = this.getIndexByLabel(randomLabel, swiper);
+
+    if (targetIndex === -1) {
+      console.error('Label não encontrada no carrossel');
+      return;
+    }
+
+    swiper.autoplay.stop();
+
+    const totalSlides = swiper.slides.length;
+    const currentIndex = swiper.realIndex;
+    const fullLoops = totalSlides * 4;
+
+    let steps = fullLoops + (targetIndex - currentIndex);
+    if (steps < 0) {
+      steps += totalSlides;
+    }
+
+    swiper.params.speed = 60;
+
+    const interval = setInterval(() => {
+      if (steps > 0) {
+        swiper.slideNext(60, true);
+        steps--;
+      } else {
+        clearInterval(interval);
+        this.stopCarousel(swiper);
+      }
+    }, 10);
+  }
+
+  private stopCarousel(swiper: any): void {
+    this.startCountdown(15000, () => {
+      this.spinToRandomLabel();
+    });
+  }
+
+  private startCountdown(duration: number, callback: () => void): void {
     const progressBar = this.progressBarEl.nativeElement;
     const progressText = this.progressTextEl.nativeElement;
+    const start = Date.now();
 
+    this.isCountingDown = true;
     clearInterval(this.countdownInterval);
-    progressBar.style.width = '100%';
 
     this.countdownInterval = setInterval(() => {
       const elapsed = Date.now() - start;
@@ -68,78 +114,27 @@ export class DoubleComponent implements OnDestroy, OnInit {
         progressText.textContent = `Girando Em ${seconds}`;
       }
 
-      if (elapsed >= duration) {
+      if (remaining <= 0) {
         clearInterval(this.countdownInterval);
-        this.randomStop();
+        this.isCountingDown = false;
+        progressBar.style.width = '100%';
+        progressText.textContent = '';
+        callback();
       }
     }, 100);
   }
 
-  randomStop() {
-    this.isCountingDown = false;
-    const swiper = this.swiperEl.nativeElement.swiper;
-    const progressText = this.progressTextEl.nativeElement;
+  private getRandomLabel(): string {
+    return this.labels[Math.floor(Math.random() * this.labels.length)];
+  }
 
-    progressText.textContent = 'Girando...';
-
-    const totalSlides = swiper.slides.length;
-    const baseCount = totalSlides / 3;
-
-    const chosenIndex = Math.floor(Math.random() * baseCount);
-    swiper.autoplay.stop();
-
-    const currentIndex = swiper.realIndex;
-    let targetIndex = chosenIndex;
-
-    if (targetIndex < currentIndex) {
-      targetIndex += baseCount;
-    }
-
-    let steps = targetIndex - currentIndex;
-    if (steps <= 0) steps += baseCount;
-
-    //quantidade de voltas extras
-    steps += baseCount * 2;
-
-    // Controle de velocidade
-    let currentSpeed = 500;
-    const maxSpeed = 100;
-    const speedIncrement = 100;
-
-    if (currentSpeed > maxSpeed) {
-      currentSpeed -= speedIncrement;
-      if (currentSpeed < maxSpeed) {
-        currentSpeed = maxSpeed;
-      }
-    } else {
-      currentSpeed += speedIncrement;
-      if (currentSpeed > maxSpeed) {
-        currentSpeed = maxSpeed;
+  private getIndexByLabel(label: string, swiper: any): number {
+    const slides = swiper.slides;
+    for (let i = 0; i < slides.length; i++) {
+      if (slides[i].querySelector(`.card.${label}`)) {
+        return i;
       }
     }
-
-    swiper.params.speed = currentSpeed;
-    swiper.update();
-
-    const onTransitionEnd = () => {
-      steps--;
-      if (steps > 0) {
-        currentSpeed += speedIncrement;
-        if (currentSpeed > maxSpeed) currentSpeed = maxSpeed;
-
-        swiper.params.speed = currentSpeed;
-        swiper.update();
-        swiper.slideNext();
-      } else {
-        // Parou no slide desejado
-        swiper.off('transitionEnd', onTransitionEnd);
-        swiper.params.speed = 100;
-        swiper.update();
-        this.startCountdown();
-      }
-    };
-
-    swiper.on('transitionEnd', onTransitionEnd);
-    swiper.slideNext();
+    return -1;
   }
 }
