@@ -33,7 +33,11 @@ export class DoubleComponent implements OnDestroy, OnInit {
   @ViewChild('progressText', { static: true }) progressTextEl!: ElementRef;
 
   isCountingDown: boolean = false;
-  quantia: number | null = null;
+  quantia: number = 0.0; // Valor numérico formatado
+  quantiaInput: string = '0,00'; // Valor exibido no campo como string
+  selectedMode: string = 'Normal';
+  selectedColor: string = 'red';
+
   private countdownInterval: any;
   private labels: string[] = [
     ...Array.from({ length: 14 }, (_, i) => `red-${i + 1}`),
@@ -136,5 +140,13 @@ export class DoubleComponent implements OnDestroy, OnInit {
       }
     }
     return -1;
+  }
+
+  toggleMode(mode: string): void {
+    this.selectedMode = mode;
+  }
+
+  selectColor(color: string): void {
+    this.selectedColor = color;
   }
 }
