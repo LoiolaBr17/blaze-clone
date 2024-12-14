@@ -8,11 +8,9 @@
   --dark-grey: #8a90a2;
   --dark-background-four: #262f3c;
   --lime-green-two: #06e385;
-  --footer-color: #1A242D;
+  --footer-color: #1a242d;
   --ff-main: SofiaPro, "Roboto", sans-serif, Nasalization;
 }
-
-
 
 * {
   padding: 0;
@@ -31,6 +29,7 @@ body {
   border: none;
   font-family: SofiaPro, "Roboto", sans-serif, Nasalization !important;
   background-color: #0f1923;
+  box-sizing: border-box;
 }
 
 button {
@@ -65,4 +64,19 @@ body {
 
 .mat-expansion-panel-body {
   padding: 0px !important;
+}
+
+input {
+  all: unset;
+  display: inline-block;
+  width: 100%;
+  height: auto;
+  border: none;
+  outline: none;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
 }
