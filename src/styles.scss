@@ -10,6 +10,11 @@
   --lime-green-two: #06e385;
   --footer-color: #1a242d;
   --ff-main: SofiaPro, "Roboto", sans-serif, Nasalization;
+
+  // reset material
+  --mdc-dialog-container-shape: 0px;
+  --mat-sys-corner-extra-large: 0px;
+  --mdc-dialog-container-color: transparent;
 }
 
 * {

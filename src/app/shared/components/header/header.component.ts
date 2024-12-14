@@ -19,6 +19,7 @@ export class HeaderComponent {
       maxWidth: '670px',
       minHeight: '247px',
       maxHeight: '500px',
+      panelClass: 'custom-dialog-container',
       data: {},
     });
   }
