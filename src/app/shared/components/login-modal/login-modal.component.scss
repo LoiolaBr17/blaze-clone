@@ -5,6 +5,15 @@
   display: flex;
   flex-direction: column;
   background: var(--gray);
+  position: relative;
+
+  .btn-close {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.4rem;
+    width: 10px;
+    cursor: pointer;
+  }
 
   .logo {
     height: 32px;

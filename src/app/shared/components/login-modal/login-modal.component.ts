@@ -7,9 +7,9 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import {ErrorStateMatcher} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatDialogRef } from '@angular/material/dialog';
 
 
 
@@ -22,4 +22,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 export class LoginModalComponent {
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
 
+  constructor(private dialogRef: MatDialogRef<LoginModalComponent>) {}
+
+  closeModal(): void {
+    this.dialogRef.close(); // Fecha o modal
+  }
 }
