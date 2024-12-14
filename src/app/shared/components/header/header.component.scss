@@ -74,3 +74,7 @@
     }
   }
 }
+
+::ng-deep .mat-mdc-dialog-surface.mdc-dialog__surface {
+  overflow-x: hidden;
+}
