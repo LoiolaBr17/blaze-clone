@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import {
   FormControl,
-  FormGroupDirective,
-  NgForm,
   Validators,
   FormsModule,
   ReactiveFormsModule,
@@ -10,6 +8,7 @@ import {
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatDialogRef } from '@angular/material/dialog';
+import { AuthService } from '../../../services/auth/auth.service';
 
 
 
@@ -21,10 +20,19 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class LoginModalComponent {
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
+  credentials = {
+    email: '',
+    password: '',
+  };
 
-  constructor(private dialogRef: MatDialogRef<LoginModalComponent>) {}
+  constructor(private dialogRef: MatDialogRef<LoginModalComponent>, private authService: AuthService) {}
 
   closeModal(): void {
-    this.dialogRef.close(); // Fecha o modal
+    this.dialogRef.close();
+  }
+
+  onLogin(): void {
+    this.authService.login(this.credentials);
+    this.dialogRef.close();
   }
 }

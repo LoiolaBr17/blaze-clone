@@ -4,7 +4,7 @@
   <img src="../../../../assets/images/logo.svg" class="logo" alt="blaze" />
   <h4 class="login-title">Faça login em sua conta</h4>
 
-  <form class="form">
+  <form class="form" (submit)="onLogin()">
     <div class="container-inputs">
       <input type="email" placeholder="Email" class="input">
       <input type="password" placeholder="Senha" class="input">
@@ -12,7 +12,7 @@
   
     <p class="forgot-pass">Esqueci a minha senha</p>
 
-    <button class="btn">Entrar</button>
+    <button class="btn" type="submit">Entrar</button>
   </form>
 
   <div class="divider">

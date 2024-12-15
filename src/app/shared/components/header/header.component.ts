@@ -2,17 +2,22 @@ import { Component } from '@angular/core';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterModalComponent } from '../register-modal/register-modal.component';
-
-
+import { AuthService, User } from '../../../services/auth/auth.service';
+import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  constructor(private dialog: MatDialog) {}
+  user$: Observable<User | null>;
+
+  constructor(private dialog: MatDialog, private authService: AuthService) {
+    this.user$ = this.authService.user$;
+  }
 
   openLoginModal(): void {
     this.dialog.open(LoginModalComponent, {
@@ -31,5 +36,9 @@ export class HeaderComponent {
       panelClass: 'teste',
       data: {},
     });
+  }
+
+  onLogout(): void {
+    this.authService.logout();
   }
 }
