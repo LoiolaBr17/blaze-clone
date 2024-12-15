@@ -35,7 +35,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
   @ViewChild('progressText', { static: true }) progressTextEl!: ElementRef;
 
   isCountingDown: boolean = false;
-  quantia: string = '';
+  quantia: number | null = null;
   selectedMode: string = 'Normal';
   selectedColor: string = 'red';
 
@@ -154,4 +154,16 @@ export class DoubleComponent implements OnDestroy, OnInit {
   betIn(){
     console.log(this.quantia)
   }
+
+  halfBet(): void {
+    if(this.quantia  != null && this.quantia >= 2) {
+      this.quantia = this.quantia / 2;
+    }
+  }
+  
+  doubleBet(): void {
+    if(this.quantia  != null) {
+      this.quantia = this.quantia * 2;
+    }
+  }  
 }
