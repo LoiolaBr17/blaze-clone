@@ -6,6 +6,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+import { NgxMaskDirective } from 'ngx-mask';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -24,6 +25,7 @@ import { FooterComponent } from '../../shared/components/footer/footer.component
     FormsModule,
     TabsDescriptionDoubleComponent,
     FooterComponent,
+    NgxMaskDirective,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
@@ -33,8 +35,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
   @ViewChild('progressText', { static: true }) progressTextEl!: ElementRef;
 
   isCountingDown: boolean = false;
-  quantia: number = 0.0; // Valor numérico formatado
-  quantiaInput: string = '0,00'; // Valor exibido no campo como string
+  quantia: string = '';
   selectedMode: string = 'Normal';
   selectedColor: string = 'red';
 
@@ -148,5 +149,9 @@ export class DoubleComponent implements OnDestroy, OnInit {
 
   selectColor(color: string): void {
     this.selectedColor = color;
+  }
+
+  betIn(){
+    console.log(this.quantia)
   }
 }

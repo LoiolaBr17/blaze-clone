@@ -19,7 +19,12 @@
       <div class="bet-input-row">
         <div class="input-bet">
           <div class="input-wrapper">
-            <input id="quantia" type="number" placeholder="Quantia" />
+            <input
+              type="text"
+              placeholder="Quantia"
+              [(ngModel)]="quantia"
+              mask="separator.2"
+            />
             <span class="input-icon">R$</span>
           </div>
         </div>
@@ -63,7 +68,7 @@
         </div>
       </div>
 
-      <button class="btn">Começar o jogo</button>
+      <button class="btn" (click)="betIn()">Começar o jogo</button>
     </div>
     <div class="r-container">
       <div class="painel">
