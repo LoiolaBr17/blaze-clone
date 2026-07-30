@@ -1,0 +1,227 @@
+<div id="crash-component">
+  <section class="crash-container">
+    <div class="menu">
+      <div class="tootle-menu">
+        <span
+          [class.selected]="selectedMode === 'Normal'"
+          [class.locked]="!canPlaceBet"
+          (click)="toggleMode('Normal')"
+        >
+          Normal
+        </span>
+        <span
+          [class.selected]="selectedMode === 'Auto'"
+          [class.locked]="!canPlaceBet"
+          (click)="toggleMode('Auto')"
+        >
+          Auto
+        </span>
+      </div>
+
+      <div class="bet-input-row">
+        <div class="input-bet">
+          <div class="input-wrapper">
+            <input
+              type="text"
+              placeholder="Quantia"
+              [(ngModel)]="quantia"
+              mask="separator.2"
+              inputmode="decimal"
+              [disabled]="!canPlaceBet"
+            />
+            <span class="input-icon">R$</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="amount-adjust"
+          [disabled]="!canPlaceBet"
+          (click)="halfBet()"
+        >
+          1/2
+        </button>
+
+        <button
+          type="button"
+          class="amount-adjust"
+          [disabled]="!canPlaceBet"
+          (click)="doubleBet()"
+        >
+          2x
+        </button>
+      </div>
+
+      <div class="cashout-row">
+        <div class="input-wrapper">
+          <input
+            type="text"
+            placeholder="Auto Retirar (Multiplicador)"
+            [(ngModel)]="targetMultiplierInput"
+            mask="separator.2"
+            inputmode="decimal"
+            [disabled]="!canPlaceBet"
+          />
+          <span class="input-icon">x</span>
+        </div>
+
+        <button
+          type="button"
+          class="clear-btn"
+          [disabled]="!canPlaceBet"
+          (click)="clearBet()"
+        >
+          Limpar
+        </button>
+      </div>
+
+      <div class="quick-targets">
+        <button
+          type="button"
+          [disabled]="!canPlaceBet"
+          (click)="setTargetMultiplier(1.5)"
+        >
+          1,50x
+        </button>
+        <button
+          type="button"
+          [disabled]="!canPlaceBet"
+          (click)="setTargetMultiplier(2)"
+        >
+          2,00x
+        </button>
+        <button
+          type="button"
+          [disabled]="!canPlaceBet"
+          (click)="setTargetMultiplier(5)"
+        >
+          5,00x
+        </button>
+      </div>
+
+      <button class="btn" [disabled]="!canPlaceBet" (click)="startRound()">
+        {{ actionButtonText }}
+      </button>
+
+      @if (activeBet; as bet) {
+        <div class="active-bet" [class.won]="hasGuaranteedWin">
+          <span>{{ hasGuaranteedWin ? "Vitória garantida" : "Aposta ativa" }}</span>
+          <strong>
+            R$ {{ formatAmount(bet.amount) }} em {{ formatMultiplier(bet.targetMultiplier) }}x
+          </strong>
+        </div>
+      }
+
+      @if (betFeedback; as feedback) {
+        <p
+          class="bet-feedback"
+          [class.success]="feedback.type === 'success'"
+          [class.error]="feedback.type === 'error'"
+        >
+          {{ feedback.message }}
+        </p>
+      }
+    </div>
+
+    <div class="r-container">
+      <div
+        class="painel"
+        [class.running]="isRunning"
+        [class.betting]="isBetting"
+        [class.crashed]="roundStatus === 'crashed'"
+        [class.won]="hasGuaranteedWin"
+      >
+        <div class="chart-shell">
+          <svg class="crash-chart" viewBox="0 0 100 100" preserveAspectRatio="none">
+            @for (label of multiplierAxisLabels; track $index) {
+              <line
+                class="grid-line"
+                x1="10"
+                [attr.y1]="100 - label.bottom"
+                x2="94"
+                [attr.y2]="100 - label.bottom"
+              ></line>
+            }
+
+            @if (selectedTargetMultiplier >= 1.01 && selectedTargetMultiplier <= maxCrashMultiplier) {
+              <line
+                class="target-line"
+                x1="10"
+                [attr.y1]="targetSvgY"
+                x2="94"
+                [attr.y2]="targetSvgY"
+              ></line>
+            }
+
+            <polyline class="crash-line" [attr.points]="chartLinePoints"></polyline>
+          </svg>
+
+          @for (label of multiplierAxisLabels; track $index) {
+            <span class="axis-label y-axis-label" [style.bottom.%]="label.bottom">
+              x{{ formatMultiplier(label.multiplier) }}
+            </span>
+          }
+
+          @for (label of timeAxisLabels; track $index) {
+            <span class="time-label" [style.left.%]="label.left">
+              {{ formatSeconds(label.seconds) }}
+            </span>
+          }
+
+          @if (isBetting) {
+            <div class="betting-progress">
+              <span [style.width.%]="bettingProgressPercent"></span>
+            </div>
+          }
+
+          @if (selectedTargetMultiplier >= 1.01 && selectedTargetMultiplier <= maxCrashMultiplier) {
+            <span class="target-badge" [style.bottom.%]="targetMarkerBottom">
+              {{ formatMultiplier(selectedTargetMultiplier) }}x
+            </span>
+          }
+
+          <div
+            class="crash-icon"
+            [style.left.%]="iconLeft"
+            [style.bottom.%]="iconBottom"
+            aria-hidden="true"
+          >
+            <img src="../../../assets/images/red-die.svg" alt="" />
+          </div>
+
+          <div
+            class="multiplier-card"
+            [class.crashed]="roundStatus === 'crashed'"
+            [class.won]="hasGuaranteedWin"
+            [class.betting]="isBetting"
+            aria-live="polite"
+          >
+            @if (isBetting) {
+              <span>Apostas encerram em</span>
+              <strong>{{ formatCountdown(bettingRemainingMs) }}s</strong>
+            } @else {
+              {{ formatMultiplier(currentMultiplier) }}X
+            }
+          </div>
+        </div>
+
+        <div class="status-indicator">
+          <div class="pulse"></div>
+          <span>Online</span>
+        </div>
+      </div>
+
+      <div class="crash-recent">
+        <h4>ANTERIOR</h4>
+
+        <div class="crash-previous casino-recent">
+          @for (round of previousCrashes; track $index) {
+            <div class="sm-box" [class.hot]="round.multiplier > 2">
+              {{ formatMultiplier(round.multiplier) }}X
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

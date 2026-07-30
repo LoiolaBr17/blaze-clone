@@ -5,6 +5,7 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
+  HostListener,
 } from '@angular/core';
 import { NgxMaskDirective } from 'ngx-mask';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -34,7 +35,15 @@ interface BetFeedback {
   type: BetFeedbackType;
 }
 
+interface SpinColorStatistic {
+  color: DrawnColor;
+  label: string;
+  count: number;
+  percentage: number;
+}
+
 const MAX_PREVIOUS_SPINS = 26;
+const SPIN_ANALYSIS_LIMIT = 25;
 const ROUND_SETTLEMENT_DELAY = 2500;
 
 @Component({
@@ -68,6 +77,8 @@ export class DoubleComponent implements OnDestroy, OnInit {
   currentUser: User | null = null;
   activeBet: PendingBet | null = null;
   betFeedback: BetFeedback | null = null;
+  isSpinStatsModalOpen = false;
+  readonly spinAnalysisLimit = SPIN_ANALYSIS_LIMIT;
 
   private countdownInterval: any;
   private spinInterval: ReturnType<typeof setInterval> | null = null;
@@ -100,6 +111,11 @@ export class DoubleComponent implements OnDestroy, OnInit {
       clearTimeout(this.spinSettleTimeout);
     }
     this.clearNextRoundTimeout();
+  }
+
+  @HostListener('document:keydown.escape')
+  closeSpinStatsModalOnEscape(): void {
+    this.closeSpinStatsModal();
   }
 
   private startCarousel(): void {
@@ -301,6 +317,48 @@ export class DoubleComponent implements OnDestroy, OnInit {
 
   toggleMode(mode: string): void {
     this.selectedMode = mode;
+  }
+
+  openSpinStatsModal(): void {
+    this.isSpinStatsModalOpen = true;
+  }
+
+  closeSpinStatsModal(): void {
+    this.isSpinStatsModalOpen = false;
+  }
+
+  get recentSpinAnalysis(): DrawnResult[] {
+    return this.previousSpins.slice(0, SPIN_ANALYSIS_LIMIT);
+  }
+
+  get spinAnalysisTotal(): number {
+    return this.recentSpinAnalysis.length;
+  }
+
+  get spinColorStats(): SpinColorStatistic[] {
+    const spins = this.recentSpinAnalysis;
+    const total = spins.length;
+    const labelsByColor: Record<DrawnColor, string> = {
+      red: 'Vermelho',
+      black: 'Preto',
+      white: 'Branco',
+    };
+
+    return (['red', 'black', 'white'] as DrawnColor[]).map((color) => {
+      const count = spins.filter((spin) => spin.color === color).length;
+      const percentage = total > 0 ? (count / total) * 100 : 0;
+
+      return {
+        color,
+        label: labelsByColor[color],
+        count,
+        percentage,
+      };
+    });
+  }
+
+  formatPercentage(value: number): string {
+    return Number.isInteger(value) ? value.toString() : value.toFixed(1);
   }
 
   selectColor(color: DrawnColor): void {

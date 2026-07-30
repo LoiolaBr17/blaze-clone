@@ -289,7 +289,12 @@
         <h4>Giros Anteriores</h4>
 
         <div class="roulette-previous casino-recent">
-          <div class="sm-box border-l-separator fairness-modal-link">
+          <button
+            type="button"
+            class="sm-box border-l-separator fairness-modal-link"
+            aria-label="Abrir estatísticas dos últimos 25 giros"
+            (click)="openSpinStatsModal()"
+          >
             <svg
               width="14px"
               height="13px"
@@ -358,7 +363,7 @@
                 </g>
               </g>
             </svg>
-          </div>
+          </button>
 
           @for (spin of previousSpins; track $index) {
             <div
@@ -377,6 +382,89 @@
       </div>
     </div>
   </section>
+
+  @if (isSpinStatsModalOpen) {
+    <div class="spin-stats-backdrop" (click)="closeSpinStatsModal()">
+      <section
+        class="spin-stats-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="spin-stats-title"
+        (click)="$event.stopPropagation()"
+      >
+        <header class="spin-stats-header">
+          <div>
+            <h3 id="spin-stats-title">Últimos 25 giros</h3>
+            <span>Base: {{ spinAnalysisTotal }}/{{ spinAnalysisLimit }}</span>
+          </div>
+
+          <button
+            type="button"
+            class="spin-stats-close"
+            aria-label="Fechar estatísticas dos giros"
+            (click)="closeSpinStatsModal()"
+          >
+            &times;
+          </button>
+        </header>
+
+        @if (spinAnalysisTotal > 0) {
+          <div class="spin-stats-percentages">
+            @for (stat of spinColorStats; track stat.color) {
+              <div
+                class="spin-stat"
+                [class.red]="stat.color === 'red'"
+                [class.black]="stat.color === 'black'"
+                [class.white]="stat.color === 'white'"
+              >
+                <div class="spin-stat-top">
+                  <span>{{ stat.label }}</span>
+                  <strong>{{ formatPercentage(stat.percentage) }}%</strong>
+                </div>
+
+                <div class="spin-stat-track">
+                  <span [style.width.%]="stat.percentage"></span>
+                </div>
+
+                <small>{{ stat.count }} de {{ spinAnalysisTotal }}</small>
+              </div>
+            }
+          </div>
+
+          <div class="spin-sequence">
+            <div class="spin-sequence-title">
+              <strong>Sequência</strong>
+              <span>mais recente primeiro</span>
+            </div>
+
+            <div class="spin-sequence-list">
+              @for (spin of recentSpinAnalysis; track $index) {
+                <div
+                  class="spin-sequence-item"
+                  [class.red]="spin.color === 'red'"
+                  [class.black]="spin.color === 'black'"
+                  [class.white]="spin.color === 'white'"
+                >
+                  @if (spin.color === 'white') {
+                    <img
+                      src="../../../assets/images/logo_white.jpg"
+                      alt="big win"
+                    />
+                  } @else {
+                    <span>{{ spin.value }}</span>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="spin-stats-empty">
+            Aguarde o primeiro giro para ver as estatísticas.
+          </div>
+        }
+      </section>
+    </div>
+  }
 
   <app-tabs-description-double />
 

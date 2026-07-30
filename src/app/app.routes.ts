@@ -1,9 +1,18 @@
 import { Routes } from '@angular/router';
-import { DoubleComponent } from './pages/double/double.component';
 
 export const routes: Routes = [
-    {
-        path: '',
-        component: DoubleComponent
-    }
+  {
+    path: '',
+    loadComponent: () =>
+      import('./pages/double/double.component').then((module) => module.DoubleComponent),
+  },
+  {
+    path: 'crash',
+    loadComponent: () =>
+      import('./pages/crash/crash.component').then((module) => module.CrashComponent),
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];

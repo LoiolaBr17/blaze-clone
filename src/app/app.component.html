@@ -1,9 +1,16 @@
 <app-header></app-header>
 <main class="main-container">
   <div class="container-nav">
-    <div class="christmas-btn-container">
-      <span class="text">💵 Ganhe R$20 Grátis</span>
-    </div>
+    <button
+      type="button"
+      class="christmas-btn-container"
+      [disabled]="isBonusOnCooldown"
+      (click)="claimBonus()"
+    >
+      <span class="text">
+        {{ isBonusOnCooldown ? bonusButtonText : "💵 " + bonusButtonText + " Grátis" }}
+      </span>
+    </button>
 
     <mat-accordion>
       <mat-expansion-panel>
@@ -11,14 +18,24 @@
           <mat-panel-title>ORIGINAIS DA BLAZE</mat-panel-title>
         </mat-expansion-panel-header>
         <div class="menu-options">
-          <div class="item">
+          <a
+            class="item"
+            routerLink="/crash"
+            routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
             <img src="../assets/images/clash.svg" alt="clash" />
-            <span>Clash</span>
-          </div>
-          <div class="item selected">
+            <span>Crash</span>
+          </a>
+          <a
+            class="item"
+            routerLink="/"
+            routerLinkActive="selected"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
             <img src="../assets/images/double.svg" alt="double" />
             <span>Double</span>
-          </div>
+          </a>
         </div>
       </mat-expansion-panel>
     </mat-accordion>
