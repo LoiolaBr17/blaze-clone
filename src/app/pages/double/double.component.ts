@@ -21,6 +21,8 @@ interface DrawnResult {
   color: DrawnColor;
 }
 
+const MAX_PREVIOUS_SPINS = 26;
+
 @Component({
   selector: 'app-double',
   templateUrl: './double.component.html',
@@ -46,6 +48,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
   selectedMode: string = 'Normal';
   selectedColor: string = 'red';
   drawnResult: DrawnResult | null = null;
+  previousSpins: DrawnResult[] = [];
 
   private countdownInterval: any;
   private spinInterval: ReturnType<typeof setInterval> | null = null;
@@ -140,10 +143,19 @@ export class DoubleComponent implements OnDestroy, OnInit {
       ?.trim();
     const color = this.getCardColor(centeredCard);
 
-    this.drawnResult = {
+    const result: DrawnResult = {
       value: value || 'Branco',
       color,
     };
+    this.drawnResult = result;
+    this.recordPreviousSpin(result);
+  }
+
+  private recordPreviousSpin(result: DrawnResult): void {
+    this.previousSpins = [result, ...this.previousSpins].slice(
+      0,
+      MAX_PREVIOUS_SPINS
+    );
   }
 
   private getCenteredCard(): HTMLElement | null {

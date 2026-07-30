@@ -334,109 +334,19 @@
             </svg>
           </div>
 
-          <div class="sm-box red">
-            <span>1</span>
-          </div>
-
-          <div class="sm-box black">
-            <span>6</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>4</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>10</span>
-          </div>
-
-          <div class="sm-box black">
-            <span>12</span>
-          </div>
-
-          <div class="sm-box">
-            <img src="../../../assets/images/logo_white.jpg" alt="big win" />
-          </div>
-
-          <div class="sm-box black">
-            <span>3</span>
-          </div>
-
-          <div class="sm-box black">
-            <span>2</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>9</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>11</span>
-          </div>
-
-          <div class="sm-box black">
-            <span>14</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>4</span>
-          </div>
-
-          <div class="sm-box black">
-            <span>1</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>7</span>
-          </div>
-
-          <div class="sm-box black">
-            <span>10</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>1</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>5</span>
-          </div>
-
-          <div class="sm-box black">
-            <span>14</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>9</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>1</span>
-          </div>
-
-          <div class="sm-box black">
-            <span>2</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>14</span>
-          </div>
-
-          <div class="sm-box black">
-            <span>2</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>8</span>
-          </div>
-
-          <div class="sm-box red">
-            <span>1</span>
-          </div>
-
-          <div class="sm-box black">
-            <span>4</span>
-          </div>
+          @for (spin of previousSpins; track $index) {
+            <div
+              class="sm-box"
+              [class.red]="spin.color === 'red'"
+              [class.black]="spin.color === 'black'"
+            >
+              @if (spin.color === 'white') {
+                <img src="../../../assets/images/logo_white.jpg" alt="big win" />
+              } @else {
+                <span>{{ spin.value }}</span>
+              }
+            </div>
+          }
         </div>
       </div>
     </div>
