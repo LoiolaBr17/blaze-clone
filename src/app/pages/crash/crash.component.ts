@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
 import { Subscription } from 'rxjs';
@@ -6,6 +6,7 @@ import { AuthService, User } from '../../services/auth/auth.service';
 
 type CrashRoundStatus = 'betting' | 'running' | 'crashed';
 type BetFeedbackType = 'info' | 'success' | 'error';
+type BetPlacementMode = 'manual' | 'auto';
 
 interface ActiveCrashBet {
   amount: number;
@@ -35,8 +36,10 @@ interface TimeAxisLabel {
 const MIN_CRASH_MULTIPLIER = 1;
 const MAX_CRASH_MULTIPLIER = 200;
 const DEFAULT_TARGET_MULTIPLIER = 2.55;
-const MAX_PREVIOUS_CRASHES = 18;
+const CRASH_ANALYSIS_LIMIT = 25;
+const MAX_PREVIOUS_CRASHES = CRASH_ANALYSIS_LIMIT;
 const BETTING_WINDOW_MS = 7000;
+const AUTO_BET_CONFIRM_BEFORE_MS = 1000;
 const ROUND_RESULT_DELAY_MS = 2500;
 const ROUND_TICK_MS = 40;
 const CHART_LEFT_PERCENT = 12;
@@ -64,7 +67,9 @@ export class CrashComponent implements OnInit, OnDestroy {
   crashedAt: number | null = null;
   bettingRemainingMs = BETTING_WINDOW_MS;
   roundElapsedMs = 0;
+  isCrashStatsModalOpen = false;
   readonly maxCrashMultiplier = MAX_CRASH_MULTIPLIER;
+  readonly crashAnalysisLimit = CRASH_ANALYSIS_LIMIT;
 
   private crashPoint: number | null = null;
   private roundDurationMs = 0;
@@ -89,6 +94,11 @@ export class CrashComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.stopAllTimers();
     this.userSubscription?.unsubscribe();
+  }
+
+  @HostListener('document:keydown.escape')
+  closeCrashStatsModalOnEscape(): void {
+    this.closeCrashStatsModal();
   }
 
   get isBetting(): boolean {
@@ -224,11 +234,15 @@ export class CrashComponent implements OnInit, OnDestroy {
     return 4;
   }
 
-  toggleMode(mode: string): void {
-    if (!this.canPlaceBet) {
-      return;
-    }
+  get recentCrashAnalysis(): CrashHistoryItem[] {
+    return this.previousCrashes.slice(0, CRASH_ANALYSIS_LIMIT);
+  }
 
+  get crashAnalysisTotal(): number {
+    return this.recentCrashAnalysis.length;
+  }
+
+  toggleMode(mode: string): void {
     this.selectedMode = mode;
   }
 
@@ -243,51 +257,10 @@ export class CrashComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!this.currentUser) {
-      this.setBetFeedback('Entre na sua conta para começar o jogo.', 'error');
-      return;
-    }
-
-    const betAmount = this.getBetAmount();
-    const targetMultiplier = this.getTargetMultiplier();
-
-    if (betAmount <= 0) {
-      this.setBetFeedback('Informe uma quantia valida para apostar.', 'error');
-      return;
-    }
-
-    if (targetMultiplier < 1.01 || targetMultiplier > MAX_CRASH_MULTIPLIER) {
-      this.setBetFeedback('Escolha um multiplicador entre 1,01x e 200x.', 'error');
-      return;
-    }
-
-    if (betAmount > this.currentUser.balance) {
-      this.setBetFeedback('Saldo insuficiente para essa aposta.', 'error');
-      return;
-    }
-
-    this.activeBet = {
-      amount: betAmount,
-      targetMultiplier,
-      payout: this.toCurrencyValue(betAmount * targetMultiplier),
-    };
-
-    this.authService.updateBalance(
-      this.toCurrencyValue(this.currentUser.balance - betAmount)
-    );
-    this.setBetFeedback(
-      `Aposta de R$ ${this.formatAmount(betAmount)} em ${this.formatMultiplier(
-        targetMultiplier
-      )}x confirmada.`,
-      'info'
-    );
+    this.placeBet('manual');
   }
 
   halfBet(): void {
-    if (!this.canPlaceBet) {
-      return;
-    }
-
     const betAmount = this.getBetAmount();
 
     if (betAmount > 0) {
@@ -296,10 +269,6 @@ export class CrashComponent implements OnInit, OnDestroy {
   }
 
   doubleBet(): void {
-    if (!this.canPlaceBet) {
-      return;
-    }
-
     const betAmount = this.getBetAmount();
 
     if (betAmount > 0) {
@@ -307,22 +276,17 @@ export class CrashComponent implements OnInit, OnDestroy {
     }
   }
 
-  clearBet(): void {
-    if (!this.canPlaceBet) {
-      return;
-    }
-
-    this.quantia = null;
-    this.targetMultiplierInput = DEFAULT_TARGET_MULTIPLIER;
+  clearMultiplier(): void {
+    this.targetMultiplierInput = null;
     this.betFeedback = null;
   }
 
-  setTargetMultiplier(multiplier: number): void {
-    if (!this.canPlaceBet) {
-      return;
-    }
+  openCrashStatsModal(): void {
+    this.isCrashStatsModalOpen = true;
+  }
 
-    this.targetMultiplierInput = multiplier;
+  closeCrashStatsModal(): void {
+    this.isCrashStatsModalOpen = false;
   }
 
   formatAmount(amount: number): string {
@@ -353,6 +317,75 @@ export class CrashComponent implements OnInit, OnDestroy {
     });
   }
 
+  private placeBet(mode: BetPlacementMode): boolean {
+    if (!this.currentUser) {
+      this.setBetFeedback('Entre na sua conta para começar o jogo.', 'error');
+      this.stopAutoModeIfNeeded(mode);
+      return false;
+    }
+
+    const betAmount = this.getBetAmount();
+    const targetMultiplier = this.getTargetMultiplier();
+
+    if (betAmount <= 0) {
+      if (mode === 'manual') {
+        this.setBetFeedback('Informe uma quantia valida para apostar.', 'error');
+      }
+      return false;
+    }
+
+    if (targetMultiplier < 1.01 || targetMultiplier > MAX_CRASH_MULTIPLIER) {
+      if (mode === 'manual') {
+        this.setBetFeedback('Escolha um multiplicador entre 1,01x e 200x.', 'error');
+      }
+      return false;
+    }
+
+    if (betAmount > this.currentUser.balance) {
+      this.setBetFeedback('Saldo insuficiente para essa aposta.', 'error');
+      this.stopAutoModeIfNeeded(mode);
+      return false;
+    }
+
+    this.activeBet = {
+      amount: betAmount,
+      targetMultiplier,
+      payout: this.toCurrencyValue(betAmount * targetMultiplier),
+    };
+
+    this.authService.updateBalance(
+      this.toCurrencyValue(this.currentUser.balance - betAmount)
+    );
+    this.setBetFeedback(
+      `${mode === 'auto' ? 'Aposta automatica' : 'Aposta'} de R$ ${this.formatAmount(
+        betAmount
+      )} em ${this.formatMultiplier(
+        targetMultiplier
+      )}x confirmada.`,
+      'info'
+    );
+
+    return true;
+  }
+
+  private tryAutoBet(): void {
+    if (
+      this.selectedMode !== 'Auto' ||
+      !this.canPlaceBet ||
+      this.bettingRemainingMs > AUTO_BET_CONFIRM_BEFORE_MS
+    ) {
+      return;
+    }
+
+    this.placeBet('auto');
+  }
+
+  private stopAutoModeIfNeeded(mode: BetPlacementMode): void {
+    if (mode === 'auto') {
+      this.selectedMode = 'Normal';
+    }
+  }
+
   private prepareNextRound(): void {
     this.stopAllTimers();
     this.crashPoint = this.generateCrashPoint();
@@ -373,6 +406,7 @@ export class CrashComponent implements OnInit, OnDestroy {
     const elapsedMs = Date.now() - this.bettingStartTimestamp;
     const remainingMs = BETTING_WINDOW_MS - elapsedMs;
     this.bettingRemainingMs = Math.max(0, remainingMs);
+    this.tryAutoBet();
 
     if (remainingMs <= 0) {
       this.startCrashRun();
@@ -528,7 +562,7 @@ export class CrashComponent implements OnInit, OnDestroy {
   }
 
   private createInitialHistory(): CrashHistoryItem[] {
-    return Array.from({ length: 12 }, () => ({
+    return Array.from({ length: CRASH_ANALYSIS_LIMIT }, () => ({
       multiplier: this.generateCrashPoint(),
     }));
   }

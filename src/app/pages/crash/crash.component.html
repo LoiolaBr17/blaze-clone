@@ -4,14 +4,12 @@
       <div class="tootle-menu">
         <span
           [class.selected]="selectedMode === 'Normal'"
-          [class.locked]="!canPlaceBet"
           (click)="toggleMode('Normal')"
         >
           Normal
         </span>
         <span
           [class.selected]="selectedMode === 'Auto'"
-          [class.locked]="!canPlaceBet"
           (click)="toggleMode('Auto')"
         >
           Auto
@@ -27,7 +25,6 @@
               [(ngModel)]="quantia"
               mask="separator.2"
               inputmode="decimal"
-              [disabled]="!canPlaceBet"
             />
             <span class="input-icon">R$</span>
           </div>
@@ -36,7 +33,6 @@
         <button
           type="button"
           class="amount-adjust"
-          [disabled]="!canPlaceBet"
           (click)="halfBet()"
         >
           1/2
@@ -45,7 +41,6 @@
         <button
           type="button"
           class="amount-adjust"
-          [disabled]="!canPlaceBet"
           (click)="doubleBet()"
         >
           2x
@@ -60,7 +55,6 @@
             [(ngModel)]="targetMultiplierInput"
             mask="separator.2"
             inputmode="decimal"
-            [disabled]="!canPlaceBet"
           />
           <span class="input-icon">x</span>
         </div>
@@ -68,34 +62,9 @@
         <button
           type="button"
           class="clear-btn"
-          [disabled]="!canPlaceBet"
-          (click)="clearBet()"
+          (click)="clearMultiplier()"
         >
           Limpar
-        </button>
-      </div>
-
-      <div class="quick-targets">
-        <button
-          type="button"
-          [disabled]="!canPlaceBet"
-          (click)="setTargetMultiplier(1.5)"
-        >
-          1,50x
-        </button>
-        <button
-          type="button"
-          [disabled]="!canPlaceBet"
-          (click)="setTargetMultiplier(2)"
-        >
-          2,00x
-        </button>
-        <button
-          type="button"
-          [disabled]="!canPlaceBet"
-          (click)="setTargetMultiplier(5)"
-        >
-          5,00x
         </button>
       </div>
 
@@ -215,6 +184,35 @@
         <h4>ANTERIOR</h4>
 
         <div class="crash-previous casino-recent">
+          <button
+            type="button"
+            class="sm-box border-l-separator crash-stats-button"
+            aria-label="Abrir ultimos 25 multiplicadores de crash"
+            (click)="openCrashStatsModal()"
+          >
+            <svg
+              width="14px"
+              height="13px"
+              viewBox="0 0 14 13"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>analytics</title>
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g fill="#73798F" fill-rule="nonzero">
+                  <g
+                    transform="translate(7.000000, 6.500000) scale(-1, 1) translate(-7.000000, -6.500000)"
+                  >
+                    <rect x="0" y="0" width="2" height="13" rx="1"></rect>
+                    <rect x="4" y="5" width="2" height="8" rx="1"></rect>
+                    <rect x="8" y="3" width="2" height="10" rx="1"></rect>
+                    <rect x="12" y="8" width="2" height="5" rx="1"></rect>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </button>
+
           @for (round of previousCrashes; track $index) {
             <div class="sm-box" [class.hot]="round.multiplier > 2">
               {{ formatMultiplier(round.multiplier) }}X
@@ -224,4 +222,56 @@
       </div>
     </div>
   </section>
+
+  @if (isCrashStatsModalOpen) {
+    <div class="crash-stats-backdrop" (click)="closeCrashStatsModal()">
+      <section
+        class="crash-stats-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="crash-stats-title"
+        (click)="$event.stopPropagation()"
+      >
+        <header class="crash-stats-header">
+          <div>
+            <h3 id="crash-stats-title">Últimos 25 multiplicadores</h3>
+            <span>Base: {{ crashAnalysisTotal }}/{{ crashAnalysisLimit }}</span>
+          </div>
+
+          <button
+            type="button"
+            class="crash-stats-close"
+            aria-label="Fechar estatisticas de crash"
+            (click)="closeCrashStatsModal()"
+          >
+            &times;
+          </button>
+        </header>
+
+        @if (crashAnalysisTotal > 0) {
+          <div class="crash-sequence">
+            <div class="crash-sequence-title">
+              <strong>Multiplicadores</strong>
+              <span>mais recente primeiro</span>
+            </div>
+
+            <div class="crash-sequence-list">
+              @for (round of recentCrashAnalysis; track $index) {
+                <div
+                  class="crash-sequence-item"
+                  [class.hot]="round.multiplier > 2"
+                >
+                  {{ formatMultiplier(round.multiplier) }}X
+                </div>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="crash-stats-empty">
+            Aguarde o primeiro crash para ver os multiplicadores.
+          </div>
+        }
+      </section>
+    </div>
+  }
 </div>
