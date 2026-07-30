@@ -35,6 +35,7 @@ interface BetFeedback {
 }
 
 const MAX_PREVIOUS_SPINS = 26;
+const ROUND_SETTLEMENT_DELAY = 2500;
 
 @Component({
   selector: 'app-double',
@@ -55,6 +56,8 @@ export class DoubleComponent implements OnDestroy, OnInit {
   @ViewChild('mySwiper', { static: true }) swiperEl!: ElementRef;
   @ViewChild('progressBar', { static: true }) progressBarEl!: ElementRef;
   @ViewChild('progressText', { static: true }) progressTextEl!: ElementRef;
+  @ViewChild(TabsDescriptionDoubleComponent, { static: true })
+  betsPanel?: TabsDescriptionDoubleComponent;
 
   isCountingDown: boolean = false;
   quantia: number | string | null = null;
@@ -69,6 +72,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
   private countdownInterval: any;
   private spinInterval: ReturnType<typeof setInterval> | null = null;
   private spinSettleTimeout: ReturnType<typeof setTimeout> | null = null;
+  private nextRoundTimeout: ReturnType<typeof setTimeout> | null = null;
   private userSubscription: Subscription | null = null;
   private labels: string[] = [
     ...Array.from({ length: 14 }, (_, i) => `red-${i + 1}`),
@@ -87,6 +91,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     clearInterval(this.countdownInterval);
+    this.betsPanel?.stopBetSimulation();
     this.userSubscription?.unsubscribe();
     if (this.spinInterval) {
       clearInterval(this.spinInterval);
@@ -94,6 +99,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
     if (this.spinSettleTimeout) {
       clearTimeout(this.spinSettleTimeout);
     }
+    this.clearNextRoundTimeout();
   }
 
   private startCarousel(): void {
@@ -107,6 +113,8 @@ export class DoubleComponent implements OnDestroy, OnInit {
     const randomLabel = this.getRandomLabel();
     const targetIndex = this.getIndexByLabel(randomLabel, swiper);
     this.drawnResult = null;
+    this.clearNextRoundTimeout();
+    this.betsPanel?.stopBetSimulation();
 
     if (targetIndex === -1) {
       console.error('Label não encontrada no carrossel');
@@ -140,17 +148,15 @@ export class DoubleComponent implements OnDestroy, OnInit {
           this.spinInterval = null;
         }
         this.spinSettleTimeout = setTimeout(() => {
-          this.stopCarousel(swiper);
+          this.stopCarousel();
         }, swiper.params.speed);
       }
     }, 10);
   }
 
-  private stopCarousel(swiper: any): void {
+  private stopCarousel(): void {
     this.updateDrawnResultFromCenteredCard();
-    this.startCountdown(15000, () => {
-      this.spinToRandomLabel();
-    });
+    this.scheduleNextRound();
   }
 
   private updateDrawnResultFromCenteredCard(): void {
@@ -172,7 +178,26 @@ export class DoubleComponent implements OnDestroy, OnInit {
     };
     this.drawnResult = result;
     this.recordPreviousSpin(result);
+    this.betsPanel?.settleRound(result.color);
     this.settleActiveBet(result);
+  }
+
+  private scheduleNextRound(): void {
+    this.clearNextRoundTimeout();
+    this.nextRoundTimeout = setTimeout(() => {
+      this.startCountdown(15000, () => {
+        this.spinToRandomLabel();
+      });
+    }, ROUND_SETTLEMENT_DELAY);
+  }
+
+  private clearNextRoundTimeout(): void {
+    if (!this.nextRoundTimeout) {
+      return;
+    }
+
+    clearTimeout(this.nextRoundTimeout);
+    this.nextRoundTimeout = null;
   }
 
   private recordPreviousSpin(result: DrawnResult): void {
@@ -236,6 +261,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
 
     this.isCountingDown = true;
     clearInterval(this.countdownInterval);
+    this.betsPanel?.startBetSimulation(duration);
 
     this.countdownInterval = setInterval(() => {
       const elapsed = Date.now() - start;
@@ -251,6 +277,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
       if (remaining <= 0) {
         clearInterval(this.countdownInterval);
         this.isCountingDown = false;
+        this.betsPanel?.stopBetSimulation();
         progressBar.style.width = '100%';
         progressText.textContent = '';
         callback();

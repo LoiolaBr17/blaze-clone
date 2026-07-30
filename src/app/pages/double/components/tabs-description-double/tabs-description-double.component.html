@@ -5,470 +5,70 @@
   >
     <mat-tab label="APOSTAS">
       <div class="roulette-container">
-        <div class="roulette red">
-          <div class="color-value">
-            <h3>Vitória 2X</h3>
-            <img src="../../../../../assets/images/red-box.svg" alt="red-box" />
-          </div>
-
-          <div class="rouletted-header">
-            <p>Total apostado</p>
-            <p>R$ 2,770.19</p>
-          </div>
-
-          <div class="roulette-users-header">
-            <p>Usuário</p>
-            <p>Quantia</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
+        @for (column of betColumns; track column.color) {
+          <div
+            class="roulette"
+            [class.red]="column.color === 'red'"
+            [class.white]="column.color === 'white'"
+            [class.black]="column.color === 'black'"
+          >
+            <div class="color-value">
+              <h3>{{ column.title }}</h3>
               <img
-                src="../../../../../assets/images/gold.svg"
-                alt="diamond user"
+                [src]="column.iconSrc"
+                [alt]="column.iconAlt"
+                [class.white-icon]="column.color === 'white'"
               />
-
-              <p>joão</p>
             </div>
 
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
+            <div class="rouletted-header">
+              <p>Total apostado</p>
+              <p class="total-value">R$ {{ formatAmount(column.displayedTotal) }}</p>
             </div>
 
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
+            <div class="roulette-users-header">
+              <p>Usuário</p>
+              <p>Quantia</p>
             </div>
 
-            <p>R$ 400.00</p>
-          </div>
+            <div class="roulette-list" aria-live="polite">
+              @if (column.bets.length > 0) {
+                @for (bet of column.bets; track bet.id) {
+                  <div
+                    class="roulette-item"
+                    [class.won]="bet.resultStatus === 'won'"
+                    [class.lost]="bet.resultStatus === 'lost'"
+                  >
+                    <div class="user">
+                      <img
+                        [src]="getBadgeIcon(bet.badge)"
+                        [alt]="bet.badge"
+                      />
 
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/platinum.svg"
-                alt="diamond user"
-              />
+                      <p>{{ bet.user }}</p>
+                    </div>
 
-              <p>joão</p>
+                    <p class="bet-amount">
+                      R$ {{ formatAmount(bet.settledAmount ?? bet.amount) }}
+                    </p>
+                  </div>
+                }
+              } @else {
+                <div class="roulette-empty">
+                  <p>Aguardando apostas</p>
+                </div>
+              }
             </div>
 
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/platinum.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
+            <div class="footer">
+              <p class="qtd-players">+{{ column.hiddenPlayers }} Jogadores</p>
+              <p>R$ {{ formatAmount(column.total) }}</p>
             </div>
-
-            <p>R$ 400.00</p>
           </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/platinum.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/gold.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/gold.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="footer">
-            <p class="qtd-players">+846 Jogadores</p>
-            <p>R$ 4,737.30</p>
-          </div>
-        </div>
-
-        <div class="roulette white">
-          <div class="color-value">
-            <h3>Vitória 14X</h3>
-            <img
-              src="../../../../../assets/images/logo_white.jpg"
-              style="border-radius: 8px"
-              alt="logo_white"
-            />
-          </div>
-
-          <div class="rouletted-header">
-            <p>Total apostado</p>
-            <p>R$ 2,770.19</p>
-          </div>
-
-          <div class="roulette-users-header">
-            <p>Usuário</p>
-            <p>Quantia</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/gold.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/platinum.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/platinum.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/platinum.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/gold.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/gold.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="footer">
-            <p class="qtd-players">+846 Jogadores</p>
-            <p>R$ 4,737.30</p>
-          </div>
-        </div>
-
-        <div class="roulette black">
-          <div class="color-value">
-            <h3>Vitória 2X</h3>
-            <img
-              src="../../../../../assets/images/black-box.svg"
-              alt="red-box"
-            />
-          </div>
-
-          <div class="rouletted-header">
-            <p>Total apostado</p>
-            <p>R$ 2,770.19</p>
-          </div>
-
-          <div class="roulette-users-header">
-            <p>Usuário</p>
-            <p>Quantia</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/gold.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/platinum.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/platinum.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/platinum.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/diamond.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/gold.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="roulette-item">
-            <div class="user">
-              <img
-                src="../../../../../assets/images/gold.svg"
-                alt="diamond user"
-              />
-
-              <p>joão</p>
-            </div>
-
-            <p>R$ 400.00</p>
-          </div>
-
-          <div class="footer">
-            <p class="qtd-players">+846 Jogadores</p>
-            <p>R$ 4,737.30</p>
-          </div>
-        </div>
+        }
       </div>
     </mat-tab>
+
     <mat-tab label="DESCRIÇÃO DO JOGO">
       <div class="description">
         <h3>Blaze Double</h3>

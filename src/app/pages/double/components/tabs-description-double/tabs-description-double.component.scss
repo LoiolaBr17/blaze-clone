@@ -24,12 +24,15 @@
 
     .roulette {
       width: 330px;
+      min-height: 586px;
       background-color: var(--gray);
       padding: 16px;
       border-radius: 8px;
       box-shadow: 0 5px 20px 0 rgba(6, 10, 14, 0.25);
       color: var(--white);
       font-family: var(--ff-main);
+      display: flex;
+      flex-direction: column;
 
       .color-value {
         display: flex;
@@ -41,8 +44,12 @@
         }
 
         img {
-          width: 35;
+          width: 35px;
           height: 35px;
+
+          &.white-icon {
+            border-radius: 8px;
+          }
         }
       }
 
@@ -54,6 +61,12 @@
         font-size: 14px;
         font-weight: 600;
         line-height: 2;
+
+        .total-value {
+          min-width: 112px;
+          text-align: right;
+          font-variant-numeric: tabular-nums;
+        }
       }
 
       .roulette-users-header {
@@ -69,6 +82,10 @@
         background-color: var(--dark-background-four);
       }
 
+      .roulette-list {
+        min-height: 386px;
+      }
+
       .roulette-item {
         display: flex;
         align-items: center;
@@ -76,15 +93,51 @@
         padding: 1rem;
         border-bottom: 1px solid var(--separator);
         font-size: 12px;
+        animation: betItemIn 0.28s ease-out both;
 
         .user {
           display: flex;
           align-items: center;
           gap: 8px;
+          min-width: 0;
 
           p {
             color: var(--dark-grey);
+            max-width: 142px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
+        }
+
+        .bet-amount {
+          flex: 0 0 auto;
+          font-variant-numeric: tabular-nums;
+          transition: color 0.2s ease;
+        }
+
+        &.won .bet-amount {
+          color: var(--lime-green-two);
+          font-weight: 700;
+        }
+
+        &.lost .bet-amount {
+          color: var(--red);
+          font-weight: 700;
+        }
+      }
+
+      .roulette-empty {
+        height: 386px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid var(--separator);
+
+        p {
+          color: var(--dark-grey);
+          font-size: 12px;
+          font-weight: 600;
         }
       }
 
@@ -92,8 +145,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-top: auto;
         padding: 1rem 1rem 0;
         font-size: 12px;
+        font-variant-numeric: tabular-nums;
 
         .qtd-players {
           color: var(--dark-grey);
@@ -156,5 +211,17 @@
         }
       }
     }
+  }
+}
+
+@keyframes betItemIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
