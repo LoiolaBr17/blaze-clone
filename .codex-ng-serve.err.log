@@ -1,0 +1,90 @@
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCannot read directory "../../../..": Access is denied.[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "C:\\Users\\Mateus Servidor\\Desktop\\treinos\\blaze\\blaze-clone\\src\\app\\pages\\double\\components\\tabs-description-double\\tabs-description-double.component.scss"[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCannot read directory "../../../..": Access is denied.[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "C:\\Users\\Mateus Servidor\\Desktop\\treinos\\blaze\\blaze-clone\\src\\app\\shared\\components\\footer\\footer.component.scss"[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCannot read directory "../../../..": Access is denied.[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "C:\\Users\\Mateus Servidor\\Desktop\\treinos\\blaze\\blaze-clone\\src\\app\\pages\\double\\double.component.scss"[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCannot read directory "../../../..": Access is denied.[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "C:\\Users\\Mateus Servidor\\Desktop\\treinos\\blaze\\blaze-clone\\src\\app\\shared\\components\\login-modal\\login-modal.component.scss"[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCannot read directory "../../../..": Access is denied.[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "C:\\Users\\Mateus Servidor\\Desktop\\treinos\\blaze\\blaze-clone\\src\\app\\shared\\components\\register-modal\\register-modal.component.scss"[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCannot read directory "../../../..": Access is denied.[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "C:\\Users\\Mateus Servidor\\Desktop\\treinos\\blaze\\blaze-clone\\src\\app\\shared\\components\\header\\header.component.scss"[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCannot read directory "../../../..": Access is denied.[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "C:\\Users\\Mateus Servidor\\Desktop\\treinos\\blaze\\blaze-clone\\src\\app\\app.component.scss"[0m [1m[35m[plugin angular-compiler][0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCannot read directory "../../../..": Access is denied.[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "C:\\Users\\Mateus Servidor\\Desktop\\treinos\\blaze\\blaze-clone\\src\\main.ts"[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCannot read directory "../../../..": Access is denied.[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "zone.js"[0m
+
+    angular:polyfills:angular:polyfills:1:7:
+[37m      1 │ import [32m'zone.js'[37m;
+        ╵        [32m~~~~~~~~~[0m
+
+  You can mark the path "zone.js" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCannot read directory "../../../..": Access is denied.[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "@angular/material/prebuilt-themes/rose-red.css"[0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'@angular/material/prebuilt-themes/rose-red.css'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  You can mark the path "@angular/material/prebuilt-themes/rose-red.css" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "src/styles.scss"[0m
+
+    angular:styles/global:styles:2:8:
+[37m      2 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+  You can mark the path "src/styles.scss" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "node_modules/swiper/swiper-bundle.min.css"[0m
+
+    angular:styles/global:styles:3:8:
+[37m      3 │ @import [32m'node_modules/swiper/swiper-bundle.min.css'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+  You can mark the path "node_modules/swiper/swiper-bundle.min.css" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+[39m[22m

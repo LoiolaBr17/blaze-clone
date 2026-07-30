@@ -83,6 +83,19 @@
             <p class="progress-text" #progressText></p>
           </div>
 
+          @if (drawnResult; as result) {
+            <div
+              class="drawn-result"
+              [class.red]="result.color === 'red'"
+              [class.black]="result.color === 'black'"
+              [class.white]="result.color === 'white'"
+              aria-live="polite"
+            >
+              <span class="drawn-label">Número sorteado</span>
+              <span class="drawn-number">{{ result.value }}</span>
+            </div>
+          }
+
           <swiper-container
             #mySwiper
             loop="true"

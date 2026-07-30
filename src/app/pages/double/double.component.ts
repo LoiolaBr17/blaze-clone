@@ -14,6 +14,13 @@ import { FormsModule } from '@angular/forms';
 import { TabsDescriptionDoubleComponent } from './components/tabs-description-double/tabs-description-double.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 
+type DrawnColor = 'red' | 'black' | 'white';
+
+interface DrawnResult {
+  value: string;
+  color: DrawnColor;
+}
+
 @Component({
   selector: 'app-double',
   templateUrl: './double.component.html',
@@ -38,8 +45,11 @@ export class DoubleComponent implements OnDestroy, OnInit {
   quantia: number | null = null;
   selectedMode: string = 'Normal';
   selectedColor: string = 'red';
+  drawnResult: DrawnResult | null = null;
 
   private countdownInterval: any;
+  private spinInterval: ReturnType<typeof setInterval> | null = null;
+  private spinSettleTimeout: ReturnType<typeof setTimeout> | null = null;
   private labels: string[] = [
     ...Array.from({ length: 14 }, (_, i) => `red-${i + 1}`),
     ...Array.from({ length: 14 }, (_, i) => `black-${i + 1}`),
@@ -52,6 +62,12 @@ export class DoubleComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     clearInterval(this.countdownInterval);
+    if (this.spinInterval) {
+      clearInterval(this.spinInterval);
+    }
+    if (this.spinSettleTimeout) {
+      clearTimeout(this.spinSettleTimeout);
+    }
   }
 
   private startCarousel(): void {
@@ -64,6 +80,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
     const swiper = this.swiperEl.nativeElement.swiper;
     const randomLabel = this.getRandomLabel();
     const targetIndex = this.getIndexByLabel(randomLabel, swiper);
+    this.drawnResult = null;
 
     if (targetIndex === -1) {
       console.error('Label não encontrada no carrossel');
@@ -83,21 +100,97 @@ export class DoubleComponent implements OnDestroy, OnInit {
 
     swiper.params.speed = 60;
 
-    const interval = setInterval(() => {
+    if (this.spinInterval) {
+      clearInterval(this.spinInterval);
+    }
+
+    this.spinInterval = setInterval(() => {
       if (steps > 0) {
         swiper.slideNext(60, true);
         steps--;
       } else {
-        clearInterval(interval);
-        this.stopCarousel(swiper);
+        if (this.spinInterval) {
+          clearInterval(this.spinInterval);
+          this.spinInterval = null;
+        }
+        this.spinSettleTimeout = setTimeout(() => {
+          this.stopCarousel(swiper);
+        }, swiper.params.speed);
       }
     }, 10);
   }
 
   private stopCarousel(swiper: any): void {
+    this.updateDrawnResultFromCenteredCard();
     this.startCountdown(15000, () => {
       this.spinToRandomLabel();
     });
+  }
+
+  private updateDrawnResultFromCenteredCard(): void {
+    const centeredCard = this.getCenteredCard();
+
+    if (!centeredCard) {
+      this.drawnResult = null;
+      return;
+    }
+
+    const value = centeredCard.querySelector<HTMLElement>('.white-rounded')
+      ?.textContent
+      ?.trim();
+    const color = this.getCardColor(centeredCard);
+
+    this.drawnResult = {
+      value: value || 'Branco',
+      color,
+    };
+  }
+
+  private getCenteredCard(): HTMLElement | null {
+    const carousel = this.swiperEl.nativeElement.closest(
+      '.container-carrosel'
+    ) as HTMLElement | null;
+    const carouselRect = carousel?.getBoundingClientRect();
+    const centerX = carouselRect
+      ? carouselRect.left + carouselRect.width / 2
+      : window.innerWidth / 2;
+    const cards = Array.from(
+      this.swiperEl.nativeElement.querySelectorAll('.card')
+    ) as HTMLElement[];
+
+    return cards.reduce<HTMLElement | null>((closestCard, card) => {
+      const cardRect = card.getBoundingClientRect();
+
+      if (!cardRect.width || !cardRect.height) {
+        return closestCard;
+      }
+
+      if (!closestCard) {
+        return card;
+      }
+
+      const cardDistance = Math.abs(
+        cardRect.left + cardRect.width / 2 - centerX
+      );
+      const closestRect = closestCard.getBoundingClientRect();
+      const closestDistance = Math.abs(
+        closestRect.left + closestRect.width / 2 - centerX
+      );
+
+      return cardDistance < closestDistance ? card : closestCard;
+    }, null);
+  }
+
+  private getCardColor(card: HTMLElement): DrawnColor {
+    if (card.classList.contains('red')) {
+      return 'red';
+    }
+
+    if (card.classList.contains('black')) {
+      return 'black';
+    }
+
+    return 'white';
   }
 
   private startCountdown(duration: number, callback: () => void): void {
