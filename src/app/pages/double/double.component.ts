@@ -11,14 +11,27 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { AuthService, User } from '../../services/auth/auth.service';
 import { TabsDescriptionDoubleComponent } from './components/tabs-description-double/tabs-description-double.component';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 type DrawnColor = 'red' | 'black' | 'white';
+type BetFeedbackType = 'info' | 'success' | 'error';
 
 interface DrawnResult {
   value: string;
   color: DrawnColor;
+}
+
+interface PendingBet {
+  amount: number;
+  color: DrawnColor;
+}
+
+interface BetFeedback {
+  message: string;
+  type: BetFeedbackType;
 }
 
 const MAX_PREVIOUS_SPINS = 26;
@@ -44,27 +57,37 @@ export class DoubleComponent implements OnDestroy, OnInit {
   @ViewChild('progressText', { static: true }) progressTextEl!: ElementRef;
 
   isCountingDown: boolean = false;
-  quantia: number | null = null;
+  quantia: number | string | null = null;
   selectedMode: string = 'Normal';
-  selectedColor: string = 'red';
+  selectedColor: DrawnColor = 'red';
   drawnResult: DrawnResult | null = null;
   previousSpins: DrawnResult[] = [];
+  currentUser: User | null = null;
+  activeBet: PendingBet | null = null;
+  betFeedback: BetFeedback | null = null;
 
   private countdownInterval: any;
   private spinInterval: ReturnType<typeof setInterval> | null = null;
   private spinSettleTimeout: ReturnType<typeof setTimeout> | null = null;
+  private userSubscription: Subscription | null = null;
   private labels: string[] = [
     ...Array.from({ length: 14 }, (_, i) => `red-${i + 1}`),
     ...Array.from({ length: 14 }, (_, i) => `black-${i + 1}`),
     'white',
   ];
 
+  constructor(private authService: AuthService) {}
+
   ngOnInit(): void {
+    this.userSubscription = this.authService.user$.subscribe((user) => {
+      this.currentUser = user;
+    });
     this.startCarousel();
   }
 
   ngOnDestroy(): void {
     clearInterval(this.countdownInterval);
+    this.userSubscription?.unsubscribe();
     if (this.spinInterval) {
       clearInterval(this.spinInterval);
     }
@@ -149,6 +172,7 @@ export class DoubleComponent implements OnDestroy, OnInit {
     };
     this.drawnResult = result;
     this.recordPreviousSpin(result);
+    this.settleActiveBet(result);
   }
 
   private recordPreviousSpin(result: DrawnResult): void {
@@ -252,23 +276,156 @@ export class DoubleComponent implements OnDestroy, OnInit {
     this.selectedMode = mode;
   }
 
-  selectColor(color: string): void {
+  selectColor(color: DrawnColor): void {
+    if (this.activeBet) {
+      return;
+    }
+
     this.selectedColor = color;
   }
 
-  betIn(){
-    console.log(this.quantia)
+  betIn(): void {
+    if (this.activeBet) {
+      this.setBetFeedback('Aguarde o resultado da aposta em andamento.', 'info');
+      return;
+    }
+
+    if (!this.isCountingDown) {
+      this.setBetFeedback('Aguarde o giro terminar para apostar novamente.', 'info');
+      return;
+    }
+
+    if (!this.currentUser) {
+      this.setBetFeedback('Entre na sua conta para começar o jogo.', 'error');
+      return;
+    }
+
+    const betAmount = this.getBetAmount();
+
+    if (betAmount <= 0) {
+      this.setBetFeedback('Informe uma quantia valida para apostar.', 'error');
+      return;
+    }
+
+    if (betAmount > this.currentUser.balance) {
+      this.setBetFeedback('Saldo insuficiente para essa aposta.', 'error');
+      return;
+    }
+
+    this.activeBet = {
+      amount: betAmount,
+      color: this.selectedColor,
+    };
+    this.authService.updateBalance(
+      this.toCurrencyValue(this.currentUser.balance - betAmount)
+    );
+    this.setBetFeedback(
+      `Aposta de R$ ${this.formatAmount(betAmount)} no ${this.getColorLabel(
+        this.selectedColor
+      )} confirmada.`,
+      'info'
+    );
   }
 
   halfBet(): void {
-    if(this.quantia  != null && this.quantia >= 2) {
-      this.quantia = this.quantia / 2;
+    if (this.activeBet) {
+      return;
+    }
+
+    const betAmount = this.getBetAmount();
+    if (betAmount > 0) {
+      this.quantia = this.toCurrencyValue(betAmount / 2);
     }
   }
   
   doubleBet(): void {
-    if(this.quantia  != null) {
-      this.quantia = this.quantia * 2;
+    if (this.activeBet) {
+      return;
     }
+
+    const betAmount = this.getBetAmount();
+    if (betAmount > 0) {
+      this.quantia = this.toCurrencyValue(betAmount * 2);
+    }
+  }
+
+  formatAmount(amount: number): string {
+    return amount.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
+  getColorLabel(color: DrawnColor): string {
+    const labelsByColor: Record<DrawnColor, string> = {
+      red: 'vermelho',
+      black: 'preto',
+      white: 'branco',
+    };
+
+    return labelsByColor[color];
+  }
+
+  private settleActiveBet(result: DrawnResult): void {
+    if (!this.activeBet) {
+      return;
+    }
+
+    const bet = this.activeBet;
+    this.activeBet = null;
+
+    if (!this.currentUser) {
+      this.setBetFeedback('A aposta foi encerrada, mas nao ha usuario logado.', 'error');
+      return;
+    }
+
+    const resultColor = this.getColorLabel(result.color);
+
+    if (result.color !== bet.color) {
+      this.setBetFeedback(
+        `Saiu ${resultColor}. Voce perdeu R$ ${this.formatAmount(bet.amount)}.`,
+        'error'
+      );
+      return;
+    }
+
+    const multiplier = bet.color === 'white' ? 14 : 2;
+    const payout = this.toCurrencyValue(bet.amount * multiplier);
+    this.authService.updateBalance(
+      this.toCurrencyValue(this.currentUser.balance + payout)
+    );
+    this.setBetFeedback(
+      `Saiu ${resultColor}. Voce ganhou R$ ${this.formatAmount(payout)}!`,
+      'success'
+    );
+  }
+
+  private getBetAmount(): number {
+    if (this.quantia === null || this.quantia === undefined) {
+      return 0;
+    }
+
+    if (typeof this.quantia === 'number') {
+      return this.toCurrencyValue(this.quantia);
+    }
+
+    const rawValue = this.quantia.trim();
+    const normalizedValue = rawValue.includes(',')
+      ? rawValue.replace(/\./g, '').replace(',', '.')
+      : rawValue;
+    const amount = Number(normalizedValue);
+
+    return Number.isFinite(amount) ? this.toCurrencyValue(amount) : 0;
+  }
+
+  private setBetFeedback(message: string, type: BetFeedbackType): void {
+    this.betFeedback = {
+      message,
+      type,
+    };
+  }
+
+  private toCurrencyValue(value: number): number {
+    return Math.round(value * 100) / 100;
   }  
 }

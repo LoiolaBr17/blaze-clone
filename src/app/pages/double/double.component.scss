@@ -84,6 +84,11 @@
           outline: none;
         }
 
+        .input-wrapper input:disabled {
+          cursor: not-allowed;
+          opacity: 0.55;
+        }
+
         .input-wrapper input::placeholder {
           color: var(--light-grey);
           font-weight: 500;
@@ -158,6 +163,15 @@
           &:hover {
             background-color: var(--black);
           }
+
+          &.disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+
+            &:hover {
+              background-color: var(--gray);
+            }
+          }
         }
 
         .half {
@@ -222,6 +236,11 @@
             &.white.selected {
               border: 2px solid var(--red);
             }
+
+            &.locked {
+              cursor: not-allowed;
+              opacity: 0.72;
+            }
           }
         }
       }
@@ -238,6 +257,60 @@
 
         &:active {
           transform: scale(0.99);
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.62;
+          transform: none;
+        }
+      }
+
+      .active-bet {
+        min-height: 52px;
+        padding: 10px 12px;
+        border: 1px solid var(--separator);
+        border-radius: 4px;
+        background-color: var(--black);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+
+        span {
+          color: var(--light-grey);
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+
+        strong {
+          color: var(--white);
+          font-size: 13px;
+          font-weight: 700;
+          line-height: 1.25;
+        }
+      }
+
+      .bet-feedback {
+        margin: 0;
+        min-height: 42px;
+        padding: 10px 12px;
+        border-left: 3px solid var(--light-grey);
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--light-grey);
+        font-size: 12px;
+        line-height: 1.35;
+
+        &.success {
+          border-left-color: var(--lime-green-two);
+          color: var(--white);
+        }
+
+        &.error {
+          border-left-color: var(--red);
+          color: var(--white);
         }
       }
     }

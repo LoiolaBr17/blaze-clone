@@ -24,16 +24,18 @@
               placeholder="Quantia"
               [(ngModel)]="quantia"
               mask="separator.2"
+              inputmode="decimal"
+              [disabled]="!!activeBet"
             />
             <span class="input-icon">R$</span>
           </div>
         </div>
 
-        <div class="half" (click)="halfBet()">
+        <div class="half" [class.disabled]="!!activeBet" (click)="halfBet()">
           <span>½</span>
         </div>
 
-        <div class="double" (click)="doubleBet()">
+        <div class="double" [class.disabled]="!!activeBet" (click)="doubleBet()">
           <span>2x</span>
         </div>
       </div>
@@ -45,6 +47,7 @@
           <div
             class="red"
             [class.selected]="selectedColor === 'red'"
+            [class.locked]="!!activeBet"
             (click)="selectColor('red')"
           >
             <span>x2</span>
@@ -53,6 +56,7 @@
           <div
             class="white"
             [class.selected]="selectedColor === 'white'"
+            [class.locked]="!!activeBet"
             (click)="selectColor('white')"
           >
             <span>x14</span>
@@ -61,6 +65,7 @@
           <div
             class="black"
             [class.selected]="selectedColor === 'black'"
+            [class.locked]="!!activeBet"
             (click)="selectColor('black')"
           >
             <span>x2</span>
@@ -68,7 +73,28 @@
         </div>
       </div>
 
-      <button class="btn" (click)="betIn()">Começar o jogo</button>
+      <button class="btn" [disabled]="!!activeBet" (click)="betIn()">
+        {{ activeBet ? "Aposta em andamento" : "Começar o jogo" }}
+      </button>
+
+      @if (activeBet; as bet) {
+        <div class="active-bet">
+          <span>Aposta ativa</span>
+          <strong>
+            R$ {{ formatAmount(bet.amount) }} no {{ getColorLabel(bet.color) }}
+          </strong>
+        </div>
+      }
+
+      @if (betFeedback; as feedback) {
+        <p
+          class="bet-feedback"
+          [class.success]="feedback.type === 'success'"
+          [class.error]="feedback.type === 'error'"
+        >
+          {{ feedback.message }}
+        </p>
+      }
     </div>
     <div class="r-container">
       <div class="painel">
