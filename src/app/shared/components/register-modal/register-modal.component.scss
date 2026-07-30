@@ -96,6 +96,11 @@
         }
       }
 
+      .error-message {
+        color: var(--red);
+        font-size: 12px;
+      }
+
       .btn {
         height: 48px;
         background-color: var(--red);

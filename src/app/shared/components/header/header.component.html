@@ -34,7 +34,17 @@
     </div>
   </div>
 
-  <div *ngIf="!(user$ | async); else loggedIn">
+  <ng-container *ngIf="user$ | async as user; else loggedOut">
+    <div class="auth">
+      <div class="amount">
+        <span class="currency">R$ {{ user.balance | number : "1.2-2" }}</span>
+      </div>
+
+      <button (click)="onLogout()" class="btn logout">Sair</button>
+    </div>
+  </ng-container>
+
+  <ng-template #loggedOut>
     <div class="no-auth">
       <div>
         <span class="login" (click)="openLoginModal()">Entrar</span>
@@ -43,20 +53,6 @@
       <button class="red sign-up" (click)="openRegisterModal()">
         Registrar-se
       </button>
-    </div>
-  </div>
-
-  <ng-template #loggedIn>
-    <div class="auth">
-      <div class="amount">
-        <span class="currency">R$ {{ (user$ | async)?.balance | number : "1.2-2" }}</span>
-      </div>
-
-      <button class="btn">
-        Depositar
-      </button>
-
-      <button (click)="onLogout()" class="btn small"><img src="../../../../assets/images/logout.svg" alt="logout"></button>
     </div>
   </ng-template>
 </header>

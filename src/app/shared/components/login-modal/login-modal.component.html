@@ -4,11 +4,27 @@
   <img src="../../../../assets/images/logo.svg" class="logo" alt="blaze" />
   <h4 class="login-title">Faça login em sua conta</h4>
 
-  <form class="form" (submit)="onLogin()">
+  <form class="form" (ngSubmit)="onLogin()">
     <div class="container-inputs">
-      <input type="email" placeholder="Email" class="input">
-      <input type="password" placeholder="Senha" class="input">
+      <input
+        type="email"
+        placeholder="Email"
+        class="input"
+        name="email"
+        [(ngModel)]="credentials.email"
+        required
+      >
+      <input
+        type="password"
+        placeholder="Senha"
+        class="input"
+        name="password"
+        [(ngModel)]="credentials.password"
+        required
+      >
     </div>
+
+    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
   
     <p class="forgot-pass">Esqueci a minha senha</p>
 

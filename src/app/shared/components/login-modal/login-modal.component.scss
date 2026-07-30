@@ -61,6 +61,12 @@
       margin-bottom: 16px;
     }
 
+    .error-message {
+      color: var(--red);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
     .btn {
       height: 48px;
       background-color: var(--red);

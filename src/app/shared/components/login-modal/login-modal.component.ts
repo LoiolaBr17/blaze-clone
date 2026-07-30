@@ -1,29 +1,21 @@
 import { Component } from '@angular/core';
-import {
-  FormControl,
-  Validators,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from '../../../services/auth/auth.service';
 
-
-
 @Component({
   selector: 'app-login-modal',
-  imports: [FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './login-modal.component.html',
   styleUrl: './login-modal.component.scss'
 })
 export class LoginModalComponent {
-  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   credentials = {
     email: '',
     password: '',
   };
+  errorMessage = '';
 
   constructor(private dialogRef: MatDialogRef<LoginModalComponent>, private authService: AuthService) {}
 
@@ -32,7 +24,13 @@ export class LoginModalComponent {
   }
 
   onLogin(): void {
-    this.authService.login(this.credentials);
+    const user = this.authService.login(this.credentials);
+
+    if (!user) {
+      this.errorMessage = 'Email ou senha invalidos.';
+      return;
+    }
+
     this.dialogRef.close();
   }
 }

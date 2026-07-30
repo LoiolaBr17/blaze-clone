@@ -33,14 +33,36 @@
     </div>
     <h3 class="title">Cadastre-se na Blaze</h3>
 
-    <form class="form">
+    <form class="form" (ngSubmit)="onRegister()">
       <div class="container-inputs">
-        <input type="email" placeholder="Email" class="input" />
-        <input type="password" placeholder="Senha" class="input" />
-        <input type="text" placeholder="CPF" class="input" />
+        <input
+          type="email"
+          placeholder="Email"
+          class="input"
+          name="email"
+          [(ngModel)]="registerData.email"
+          required
+        />
+        <input
+          type="password"
+          placeholder="Senha"
+          class="input"
+          name="password"
+          [(ngModel)]="registerData.password"
+          required
+        />
+        <input
+          type="text"
+          placeholder="CPF"
+          class="input"
+          name="cpf"
+          [(ngModel)]="registerData.cpf"
+        />
       </div>
 
-      <button class="btn">Comece já!</button>
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <button class="btn" type="submit">Comece já!</button>
     </form>
 
     <div class="divider">
