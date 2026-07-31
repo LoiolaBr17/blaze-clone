@@ -1,19 +1,30 @@
-<app-header></app-header>
-<main class="main-container">
+<app-header
+  [navigationCollapsed]="isNavigationCollapsed"
+  (menuToggle)="toggleNavigation()"
+></app-header>
+<main class="main-container" [class.nav-collapsed]="isNavigationCollapsed">
   <div class="container-nav">
     <button
       type="button"
       class="christmas-btn-container"
       [disabled]="isBonusOnCooldown"
+      [attr.aria-label]="isBonusOnCooldown ? bonusButtonText : bonusButtonText + ' Grátis'"
       (click)="claimBonus()"
     >
+      <span class="bonus-icon" aria-hidden="true">💵</span>
       <span class="text">
-        {{ isBonusOnCooldown ? bonusButtonText : "💵 " + bonusButtonText + " Grátis" }}
+        {{ isBonusOnCooldown ? bonusButtonText : bonusButtonText + " Grátis" }}
       </span>
     </button>
 
     <mat-accordion>
-      <mat-expansion-panel>
+      <mat-expansion-panel
+        [expanded]="isGamesExpanded || isNavigationCollapsed"
+        [hideToggle]="isNavigationCollapsed"
+        [disabled]="isNavigationCollapsed"
+        (opened)="isGamesExpanded = true"
+        (closed)="isGamesExpanded = false"
+      >
         <mat-expansion-panel-header>
           <mat-panel-title>ORIGINAIS DA BLAZE</mat-panel-title>
         </mat-expansion-panel-header>
@@ -23,6 +34,8 @@
             routerLink="/crash"
             routerLinkActive="selected"
             [routerLinkActiveOptions]="{ exact: true }"
+            aria-label="Crash"
+            title="Crash"
           >
             <img src="../assets/images/clash.svg" alt="clash" />
             <span>Crash</span>
@@ -32,9 +45,21 @@
             routerLink="/"
             routerLinkActive="selected"
             [routerLinkActiveOptions]="{ exact: true }"
+            aria-label="Double"
+            title="Double"
           >
             <img src="../assets/images/double.svg" alt="double" />
             <span>Double</span>
+          </a>
+          <a
+            class="item"
+            routerLink="/mine-rush"
+            routerLinkActive="selected"
+            aria-label="Mine Rush"
+            title="Mine Rush"
+          >
+            <img src="../assets/images/mine/diamante.png" alt="mine rush" />
+            <span>Mine Rush</span>
           </a>
         </div>
       </mat-expansion-panel>

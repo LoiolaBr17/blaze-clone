@@ -1,0 +1,337 @@
+<div id="mine-rush-component">
+  <section class="game-shell" [class.has-win]="score.hasWin">
+    <header class="game-header" style="gap: 8px; flex-wrap: wrap">
+      <div>
+        <strong>Mine Rush</strong>
+      </div>
+
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        "
+      >
+        @if (canSkipSequenceAnimations) {
+          <button
+            type="button"
+            style="
+              min-height: 38px;
+              border-radius: 4px;
+              background: var(--red);
+              color: var(--white);
+              cursor: pointer;
+              font-weight: 900;
+              padding: 0 12px;
+            "
+            aria-label="Pular animação das múltiplas jogadas"
+            (click)="skipSequenceAnimations()"
+          >
+            Pular
+          </button>
+        }
+
+        <div
+          class="header-payout"
+          style="
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--black);
+            border-radius: 4px;
+            padding: 10px 12px;
+          "
+          aria-live="polite"
+        >
+          <span style="color: var(--light-grey); font-size: 11px">Ganho</span>
+          <strong style="color: var(--lime-green-two)">+{{ formatScore(headerPayoutValue) }}</strong>
+        </div>
+      </div>
+    </header>
+
+    <div class="board-stage">
+      <div
+        class="mine-board"
+        [class.spinning]="isSpinning"
+        [class.winning-board]="score.hasWin"
+        role="grid"
+        aria-label="Tabuleiro Mine Rush"
+      >
+        @for (row of board; track $index) {
+          @for (cell of row; track trackCell($index, cell)) {
+            <div
+              class="mine-cell"
+              role="gridcell"
+              [class.winning]="isWinningCell(cell)"
+              [class.symbol-pickaxe]="cell.symbol.id === 'pickaxe'"
+              [class.symbol-shovel]="cell.symbol.id === 'shovel'"
+              [class.symbol-helmet]="cell.symbol.id === 'helmet'"
+              [class.symbol-amethyst]="cell.symbol.id === 'amethyst'"
+              [class.symbol-sapphire]="cell.symbol.id === 'sapphire'"
+              [class.symbol-emerald]="cell.symbol.id === 'emerald'"
+              [class.symbol-ruby]="cell.symbol.id === 'ruby'"
+              [class.symbol-diamond]="cell.symbol.id === 'diamond'"
+              [class.symbol-dynamite]="cell.symbol.id === 'dynamite'"
+              [class.row-0]="cell.row === 0"
+              [class.row-1]="cell.row === 1"
+              [class.row-2]="cell.row === 2"
+              [class.row-3]="cell.row === 3"
+              [class.row-4]="cell.row === 4"
+              [attr.aria-label]="cell.symbol.label"
+            >
+              <img [src]="cell.symbol.asset" [alt]="cell.symbol.label" />
+            </div>
+          }
+        }
+      </div>
+
+      @if (isSequenceActive) {
+        <div
+          class="rounds-indicator"
+          aria-label="Rodada atual e total de rodadas"
+        >
+          {{ sequencePlayedRounds }}/{{ sequenceTotalRounds }}
+        </div>
+      }
+
+      @if (score.hasWin) {
+        <div class="victory-indicator" aria-live="polite">
+          <span>Vitória</span>
+          <strong>+{{ formatScore(currentRoundPayout) }}</strong>
+        </div>
+      }
+
+      @if (sequenceResult; as result) {
+        <div class="payout-overlay" [class.pending]="isCreditPending">
+          <span>{{ isCreditPending ? "Total ganho" : "Sequência finalizada" }}</span>
+          <strong>+{{ formatScore(result.amount) }}</strong>
+          <small>ganho em {{ result.rounds }} jogadas</small>
+        </div>
+      } @else {
+        @if (pendingPayout; as payout) {
+          <div class="payout-overlay" [class.pending]="isCreditPending">
+            <span>{{ isCreditPending ? "Total ganho" : "Ganho creditado" }}</span>
+            <strong>+{{ formatScore(payout.amount) }}</strong>
+            <small>ganho na jogada</small>
+          </div>
+        }
+      }
+    </div>
+
+    <div class="play-controls">
+      <button
+        type="button"
+        class="entry-button"
+        [disabled]="isSpinning || isCreditPending || isSequenceActive"
+        aria-label="Diminuir entrada"
+        (click)="decreaseEntry()"
+      >
+        -
+      </button>
+
+      <div class="entry-display">
+        <span>Entrada</span>
+        <strong>{{ formatEntry(entryValue) }}</strong>
+      </div>
+
+      <button
+        type="button"
+        class="entry-button"
+        [disabled]="isSpinning || isCreditPending || isSequenceActive"
+        aria-label="Aumentar entrada"
+        (click)="increaseEntry()"
+      >
+        +
+      </button>
+
+      <button
+        type="button"
+        class="play-button"
+        [disabled]="isSpinning || isCreditPending || isSequenceActive"
+        (click)="playRound()"
+      >
+        {{ isSpinning ? "Girando..." : isCreditPending ? "Creditando..." : "Jogar" }}
+      </button>
+
+      <button
+        type="button"
+        class="auto-button icon-button"
+        [disabled]="isSpinning || isCreditPending || isSequenceActive"
+        aria-label="Comprar múltiplas rodadas"
+        (click)="openRoundsModal()"
+      >
+        <img src="../../../assets/images/arrows-rotate-solid-full.svg" alt="" />
+      </button>
+
+      <button
+        type="button"
+        class="info-button icon-button"
+        aria-label="Ver percentuais do Mine Rush"
+        (click)="openInfoModal()"
+      >
+        <img src="../../../assets/images/circle-info-solid-full.svg" alt="" />
+      </button>
+    </div>
+  </section>
+
+  @if (feedback; as item) {
+    <div
+      class="mine-toast"
+      [class.success]="item.type === 'success'"
+      [class.error]="item.type === 'error'"
+    >
+      {{ item.message }}
+    </div>
+  }
+
+  @if (isRoundsModalOpen) {
+    <div class="rounds-modal-backdrop" (click)="closeRoundsModal()">
+      <section
+        class="rounds-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="rounds-modal-title"
+        (click)="$event.stopPropagation()"
+      >
+        <header>
+          <strong id="rounds-modal-title">Múltiplas jogadas</strong>
+
+          <button
+            type="button"
+            aria-label="Fechar modal"
+            (click)="closeRoundsModal()"
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="round-presets">
+          @for (preset of sequenceRoundPresets; track preset) {
+            <button
+              type="button"
+              [class.selected]="sequenceRoundCount === preset"
+              (click)="selectSequenceRoundCount(preset)"
+            >
+              {{ preset }}x
+            </button>
+          }
+        </div>
+
+        <div class="rounds-picker">
+          <button type="button" (click)="decreaseSequenceRounds()">-</button>
+          <div>
+            <strong>{{ sequenceRoundCount }}</strong>
+          </div>
+          <button type="button" (click)="increaseSequenceRounds()">+</button>
+        </div>
+
+        <button
+          type="button"
+          class="rounds-cost"
+          style="
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--white);
+            cursor: pointer;
+          "
+          [style.background]="isDoubleLuckEnabled ? 'var(--red)' : 'var(--black)'"
+          [attr.aria-pressed]="isDoubleLuckEnabled"
+          (click)="toggleDoubleLuck()"
+        >
+          <span>Sorte em dobro</span>
+          <strong>{{ isDoubleLuckEnabled ? "Ativo" : "Inativo" }}</strong>
+        </button>
+
+        <div class="rounds-cost">
+          <span>
+            {{ sequenceRoundCount }} × {{ formatEntry(entryValue) }}{{ isDoubleLuckEnabled ? " × 2" : "" }}
+          </span>
+          <strong>Total {{ formatScore(sequenceTotalCost) }}</strong>
+        </div>
+
+        <button
+          type="button"
+          class="buy-rounds-button"
+          (click)="buySequenceRounds()"
+        >
+          Comprar e jogar
+        </button>
+      </section>
+    </div>
+  }
+
+  @if (isInfoModalOpen) {
+    <div class="rounds-modal-backdrop" (click)="closeInfoModal()">
+      <section
+        class="rounds-modal"
+        style="width: min(1040px, 100%); max-height: 86vh; overflow: auto"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="info-modal-title"
+        (click)="$event.stopPropagation()"
+      >
+        <header>
+          <strong id="info-modal-title">Percentuais</strong>
+
+          <button
+            type="button"
+            aria-label="Fechar modal"
+            (click)="closeInfoModal()"
+          >
+            ×
+          </button>
+        </header>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+            gap: 8px;
+            margin-top: 14px;
+          "
+        >
+          @for (item of infoRows; track item.id) {
+            <div
+              style="
+                display: grid;
+                grid-template-columns: minmax(96px, 1fr) minmax(62px, max-content) minmax(72px, max-content);
+                gap: 6px;
+                align-items: center;
+                margin-top: 0;
+                background: var(--black);
+                border-radius: 4px;
+                padding: 10px;
+              "
+            >
+              <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
+                <img
+                  [src]="item.asset"
+                  [alt]="item.label"
+                  width="30"
+                  height="30"
+                />
+                <strong style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
+                  {{ item.label }}
+                </strong>
+              </span>
+
+              <span style="text-align: right; white-space: nowrap">
+                <small style="display: block; color: var(--light-grey); font-size: 10px">
+                  Retorno
+                </small>
+                <strong style="font-size: 12px">{{ item.returnText }}</strong>
+              </span>
+
+              <span style="text-align: right; white-space: nowrap">
+                <small style="display: block; color: var(--light-grey); font-size: 10px">
+                  Sequência
+                </small>
+                <strong style="font-size: 12px">{{ item.sequenceChanceText }}</strong>
+              </span>
+            </div>
+          }
+        </div>
+      </section>
+    </div>
+  }
+</div>

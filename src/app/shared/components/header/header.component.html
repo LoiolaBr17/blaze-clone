@@ -1,6 +1,12 @@
 <header class="header">
   <div class="content-first">
-    <div class="left-bar-action">
+    <button
+      type="button"
+      class="left-bar-action"
+      aria-label="Alternar menu lateral"
+      [attr.aria-expanded]="!navigationCollapsed"
+      (click)="toggleMenu()"
+    >
       <svg
         class="menu-toogle"
         width="16"
@@ -22,7 +28,7 @@
           fill="white"
         />
       </svg>
-    </div>
+    </button>
 
     <img src="../../../../assets/images/logo.svg" alt="logo" class="logo" />
 

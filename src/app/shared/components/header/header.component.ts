@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterModalComponent } from '../register-modal/register-modal.component';
@@ -13,6 +13,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
+  @Input() navigationCollapsed = false;
+  @Output() menuToggle = new EventEmitter<void>();
+
   user$: Observable<User | null>;
 
   constructor(private dialog: MatDialog, private authService: AuthService) {
@@ -40,5 +43,9 @@ export class HeaderComponent {
 
   onLogout(): void {
     this.authService.logout();
+  }
+
+  toggleMenu(): void {
+    this.menuToggle.emit();
   }
 }

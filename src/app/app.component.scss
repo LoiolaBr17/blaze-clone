@@ -6,15 +6,18 @@
     width: 245px;
     min-width: 245px;
     height: auto;
-    height: auto;
     background-color: #0f1923;
     padding: 18px 23px 15px;
+    overflow: hidden;
+    transition: width 0.25s ease, min-width 0.25s ease, padding 0.25s ease;
 
     .christmas-btn-container {
       display: flex;
       justify-content: center;
       align-items: center;
+      gap: 6px;
       width: 100%;
+      min-height: 38px;
       border-radius: 4px;
       padding: 10px;
       background-color: #f12c4c;
@@ -23,10 +26,17 @@
       cursor: pointer;
       font-family: var(--ff-main);
 
+      .bonus-icon {
+        color: #fff;
+        font-size: 16px;
+        line-height: 1;
+      }
+
       .text {
         color: #fff;
         font-size: 12px;
         font-weight: 600;
+        white-space: nowrap;
       }
 
       &:hover {
@@ -43,6 +53,26 @@
       &:disabled:hover {
         background-color: #323b45;
         border: 1px solid transparent;
+      }
+    }
+  }
+
+  &.nav-collapsed {
+    .container-nav {
+      width: 72px;
+      min-width: 72px;
+      padding: 18px 14px 15px;
+
+      .christmas-btn-container {
+        width: 44px;
+        height: 44px;
+        min-height: 44px;
+        padding: 0;
+        margin: 0 auto;
+
+        .text {
+          display: none;
+        }
       }
     }
   }
@@ -80,9 +110,54 @@ mat-expansion-panel {
       font-family: var(--ff-main);
       cursor: pointer;
       text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
+
+      img {
+        width: 24px;
+        height: 24px;
+        flex: 0 0 24px;
+      }
 
       &.selected {
         border-right: 3px solid var(--red);
+      }
+
+      &:hover {
+        background-color: rgba(141, 146, 151, 0.15);
+      }
+    }
+  }
+}
+
+.main-container.nav-collapsed {
+  mat-expansion-panel {
+    padding: 0;
+  }
+
+  mat-expansion-panel-header {
+    display: none;
+  }
+
+  .menu-options {
+    align-items: center;
+    gap: 10px;
+    padding-top: 16px;
+
+    .item {
+      width: 44px;
+      height: 44px;
+      justify-content: center;
+      gap: 0;
+      padding: 0;
+
+      span {
+        display: none;
+      }
+
+      &.selected {
+        border-right: 0;
+        background-color: rgba(241, 44, 76, 0.16);
       }
     }
   }

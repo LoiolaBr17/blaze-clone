@@ -28,7 +28,7 @@ export class AuthService {
       name: 'Usuario Teste',
       email: 'teste@gmail.com',
       password: '123',
-      balance: 500000,
+      balance: 5000,
     },
   ];
   private nextUserId = 2;

@@ -1,0 +1,313 @@
+#mine-rush-component {
+  min-height: 100vh;
+  padding: 1rem 0 2rem;
+  background: var(--black);
+  color: var(--white);
+}
+
+.game-shell {
+  width: min(900px, 100%);
+  margin: 0 auto;
+  border-radius: 6px;
+  background: var(--gray);
+  padding: 16px;
+}
+
+.game-header,
+.victory-indicator,
+.rounds-indicator,
+.payout-overlay {
+  display: flex;
+  align-items: center;
+}
+
+.game-header {
+  justify-content: space-between;
+}
+
+.entry-display span,
+.victory-indicator span,
+.payout-overlay span,
+.payout-overlay small {
+  color: var(--light-grey);
+  font-size: 11px;
+}
+
+.entry-display,
+.rounds-picker > div,
+.rounds-cost {
+  background: var(--black);
+  border-radius: 4px;
+  padding: 10px 12px;
+}
+
+.victory-indicator strong,
+.mine-toast.success,
+.payout-overlay strong {
+  color: var(--lime-green-two);
+}
+
+.board-stage {
+  position: relative;
+  min-height: 410px;
+  margin: 12px 0;
+  border-radius: 6px;
+  background:
+    linear-gradient(90deg, rgba(15, 25, 35, 0.94), rgba(15, 25, 35, 0.7)),
+    url("../../../assets/images/mine/bg.png") center / cover;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 18px;
+}
+
+.mine-board {
+  width: min(620px, 100%);
+  aspect-ratio: 6 / 5;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mine-cell {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  background: rgba(11, 17, 24, 0.9);
+  display: grid;
+  place-items: center;
+  overflow: visible;
+}
+
+.mine-cell img {
+  width: min(76%, 72px);
+  height: min(76%, 72px);
+  object-fit: contain;
+}
+
+.spinning .mine-cell img {
+  animation: roll-down 420ms cubic-bezier(0.2, 0.72, 0.28, 1) infinite;
+}
+
+.spinning .row-1 img {
+  animation-duration: 500ms;
+}
+
+.spinning .row-2 img {
+  animation-duration: 580ms;
+}
+
+.spinning .row-3 img {
+  animation-duration: 660ms;
+}
+
+.spinning .row-4 img {
+  animation-duration: 740ms;
+}
+
+.winning {
+  border-color: rgba(6, 227, 133, 0.9);
+  box-shadow: 0 0 16px rgba(6, 227, 133, 0.22);
+}
+
+.winning img {
+  animation: win-pulse 720ms ease-in-out infinite alternate;
+}
+
+.victory-indicator,
+.rounds-indicator,
+.payout-overlay {
+  position: absolute;
+  border: 1px solid rgba(6, 227, 133, 0.45);
+  border-radius: 4px;
+  background: rgba(15, 25, 35, 0.92);
+  padding: 8px 10px;
+  gap: 8px;
+}
+
+.victory-indicator {
+  top: 16px;
+  left: 16px;
+}
+
+.rounds-indicator {
+  top: 16px;
+  right: 16px;
+  color: #f7c948;
+  font-weight: 900;
+}
+
+.payout-overlay {
+  inset: 50% auto auto 50%;
+  width: min(260px, calc(100% - 32px));
+  min-height: 118px;
+  flex-direction: column;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+}
+
+.payout-overlay strong {
+  font-size: 34px;
+}
+
+.play-controls {
+  width: min(620px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 48px minmax(110px, 1fr) 48px minmax(120px, 1fr) 52px 52px;
+  gap: 8px;
+}
+
+.entry-button,
+.play-button,
+.icon-button,
+.buy-rounds-button {
+  min-height: 52px;
+  border-radius: 4px;
+  background: var(--red);
+  color: var(--white);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.icon-button img {
+  width: 19px;
+  height: 19px;
+  filter: invert(1);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.rounds-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.58);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.rounds-modal {
+  width: min(390px, 100%);
+  background: var(--gray);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.rounds-modal header,
+.rounds-picker,
+.rounds-cost {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.rounds-picker,
+.round-presets,
+.rounds-cost {
+  margin-top: 14px;
+}
+
+.rounds-modal header button,
+.rounds-picker button,
+.round-presets button {
+  width: 42px;
+  height: 42px;
+  border-radius: 4px;
+  background: var(--black);
+  color: var(--white);
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.round-presets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.round-presets button {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.round-presets button.selected {
+  background: var(--red);
+}
+
+.rounds-picker > div {
+  flex: 1;
+  text-align: center;
+}
+
+.rounds-cost strong,
+.entry-display strong {
+  display: block;
+  color: #f7c948;
+}
+
+.buy-rounds-button {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.mine-toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 50;
+  border-radius: 4px;
+  background: #111b26;
+  color: var(--light-grey);
+  padding: 12px 14px;
+}
+
+.mine-toast.error {
+  color: var(--red);
+}
+
+@keyframes roll-down {
+  from {
+    transform: translateY(-24%) scale(0.94);
+  }
+
+  to {
+    transform: translateY(24%) scale(1);
+  }
+}
+
+@keyframes win-pulse {
+  to {
+    transform: scale(1.08);
+  }
+}
+
+@media (max-width: 640px) {
+  .game-shell,
+  .board-stage {
+    padding: 10px;
+  }
+
+  .board-stage {
+    min-height: 330px;
+  }
+
+  .mine-board {
+    gap: 5px;
+  }
+
+  .play-controls {
+    grid-template-columns: 40px minmax(80px, 1fr) 40px 44px 44px;
+  }
+
+  .play-button {
+    grid-column: 1 / 4;
+  }
+}

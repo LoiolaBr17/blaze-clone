@@ -29,6 +29,8 @@ export class AppComponent implements OnDestroy {
   title = 'clone-blaze';
   bonusButtonText = 'Ganhe R$100';
   isBonusOnCooldown = false;
+  isNavigationCollapsed = false;
+  isGamesExpanded = true;
 
   private readonly bonusAmount = 100;
   private readonly bonusCooldownMs = 5 * 60 * 1000;
@@ -59,6 +61,10 @@ export class AppComponent implements OnDestroy {
     const nextClaimAt = Date.now() + this.bonusCooldownMs;
     this.saveNextClaimAt(this.currentUser.id, nextClaimAt);
     this.startBonusTimer(nextClaimAt);
+  }
+
+  toggleNavigation(): void {
+    this.isNavigationCollapsed = !this.isNavigationCollapsed;
   }
 
   private syncBonusCooldown(): void {
